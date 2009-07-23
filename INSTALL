@@ -1,0 +1,36 @@
+sefira is a C++ library, so you need a C++ compiler to build it (it's
+developed with gcc 4.3 on Linux). It's built using autotools
+(automake, autoconf and libtool), and because the repository doesn't
+contain the files that autotools generate, you need them installed
+before starting the build. You also need libxml2, used for parsing the
+XML input. The first part of the build is generating the makefiles:
+
+autoheader
+aclocal
+libtoolize
+automake --add-missing
+autoconf
+
+Once created, the generated files should stay OK even when you edit
+sefira source code (autotools set the makefiles to remake themselves
+when their source Makefile.am changes). Afterwards, the build is the
+same as for any GNU distribution:
+
+./configure
+make
+
+Various configure parameters allow customization of compilation flags,
+installation directories etc. - run ``./configure --help'' for an
+overview. make makes sefira executables (technically their wrappers,
+but that doesn't make any difference for a simple execution) available
+in the bin directory, so that they can be tested by running
+
+make check
+
+(requires expect). Test trees for the automated check (in testdata
+directory) are quite small - if you want bigger inputs, you can
+generate some with the gentree.py script available in scripts
+directory (requires python). For debugging or use of libsefira (if you
+can think of any), it can be installed by running (as root)
+
+make install
