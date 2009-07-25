@@ -53,9 +53,9 @@ bool ForrestLetter::operator==(const ForrestLetter &other) const
     return true;
 }
 
-INode *ForrestLetter::pop_right_root()
+INode *ForrestLetter::pop_back_root()
 {
-    TRACE1("enter pop_right_root of " << *this);
+    TRACE1("enter pop_back_root of " << *this);
 
     if (treeTops.empty()) {
         throw std::invalid_argument("can't pop rightmost root from empty forrest");
@@ -65,11 +65,11 @@ INode *ForrestLetter::pop_right_root()
     treeTops.pop_back();
     append_children(node);
 
-    TRACE1("exit pop_right_root: " << *this << " returns " << node);
+    TRACE1("exit pop_back_root: " << *this << " returns " << node);
     return node;
 }
 
-INode *ForrestLetter::pop_right_tree()
+INode *ForrestLetter::pop_back_tree()
 {
     if (treeTops.empty()) {
         throw std::invalid_argument("can't pop rightmost tree from empty forrest");

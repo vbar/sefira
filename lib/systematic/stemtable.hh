@@ -19,12 +19,27 @@ private:
 
     TMap table;
 
-public:
-    // trying to retrieve an answer which hasn't been inserted before
-    // is an error
     Answer get(INode *v, INode *w) const;
 
     void insert(INode *v, INode *w, const Answer &a);
+
+public:
+
+    // trying to retrieve an answer which hasn't been inserted before
+    // is an error
+    Answer get(INode *v, INode *w, bool swap) const
+    {
+        return swap ? get(w, v) : get(v, w);
+    }
+
+    void insert(INode *v, INode *w, bool swap, const Answer &a)
+    {
+        if (swap) {
+	    insert(w, v, a);
+	} else {
+	    insert(v, w, a);
+	}
+    }
 };
 
 std::ostream &operator<<(std::ostream &os, const StemTable &t);

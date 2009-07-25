@@ -41,7 +41,7 @@ void SmallEnumBase::init(INode *root)
     TNodeIndex sz = root->get_size();
     while (sz) {
         add_left_subforrests(f, sz, map, set);
-	f.pop_right_root();
+	f.pop_back_root();
 	--sz;
     }
 
@@ -56,7 +56,7 @@ void SmallEnumBase::add_left_subforrests(const Forrest &forrest,
     Forrest f(forrest);
     while (sz) {
         add_one(f, sz, map, set);
-	f.pop_left_root();
+	f.pop_front_root();
 	--sz;
     }
 }

@@ -36,7 +36,7 @@ Forrest::Forrest():
 {
 }
 
-INode *Forrest::get_left() const
+INode *Forrest::get_front() const
 {
     const ForrestLetter *letter = get_letter();
     if (letter->treeTops.empty()) {
@@ -46,7 +46,7 @@ INode *Forrest::get_left() const
     return letter->treeTops[0];
 }
 
-INode *Forrest::get_right() const
+INode *Forrest::get_back() const
 {
     const ForrestLetter *letter = get_letter();
     if (letter->treeTops.empty()) {
@@ -56,11 +56,11 @@ INode *Forrest::get_right() const
     return letter->treeTops.back();
 }
 
-INode *Forrest::pop_left_root()
+INode *Forrest::pop_front_root()
 {
     typedef ForrestLetter::TTreeTops TTreeTops;
 
-    TRACE1("enter pop_left_root of " << *this);
+    TRACE1("enter pop_front_root of " << *this);
 
     ForrestLetter *old_letter = get_letter();
     TTreeTops::const_iterator iter = old_letter->treeTops.begin();
@@ -83,17 +83,17 @@ INode *Forrest::pop_left_root()
   
     swap(spare);
 
-    TRACE1("exit pop_left_root: " << *this << " returns " << node);
+    TRACE1("exit pop_front_root: " << *this << " returns " << node);
     return node;
 }
 
-INode *Forrest::pop_right_root()
+INode *Forrest::pop_back_root()
 {
     ensure_single();
-    return get_letter()->pop_right_root();
+    return get_letter()->pop_back_root();
 }
 
-INode *Forrest::pop_left_tree()
+INode *Forrest::pop_front_tree()
 {
     typedef ForrestLetter::TTreeTops TTreeTops;
 
@@ -119,10 +119,10 @@ INode *Forrest::pop_left_tree()
     return node;
 }
 
-INode *Forrest::pop_right_tree()
+INode *Forrest::pop_back_tree()
 {
     ensure_single();
-    return get_letter()->pop_right_tree();
+    return get_letter()->pop_back_tree();
 }
 
 void Forrest::do_insert(const Forrest &other)

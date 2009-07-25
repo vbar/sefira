@@ -34,7 +34,7 @@ void SmallLeftEnum::add_one(const Forrest &forrest,
         return;
     }
 
-    INode *leaf = forrest.get_left();
+    INode *leaf = forrest.get_front();
     INode *left = leaf->get_left();
     INode *right = leaf->get_right();
     while (left || right) {

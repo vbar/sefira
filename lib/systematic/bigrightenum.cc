@@ -8,16 +8,16 @@ systematic::BigRightEnum::BigRightEnum(INode *parent)
     INode *child = parent->get_left();
     emptyEdge = !child;
     if (child) {
-        while (forrest.get_right() != child) {
+        while (forrest.get_back() != child) {
 	    seq.push_back(forrest);
-	    forrest.pop_right_root();
+	    forrest.pop_back_root();
 	}
 
 	seq.push_back(forrest);
     } else {
         while (!forrest.is_empty()) {
 	    seq.push_back(forrest);
-	    forrest.pop_right_root();
+	    forrest.pop_back_root();
 	}
     }
 }

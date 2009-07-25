@@ -16,6 +16,11 @@
 
 namespace systematic {
 
+inline static INode *get_edge(const Forrest &forrest, bool twist)
+{
+    return twist ? forrest.get_back() : forrest.get_front();
+}
+
 Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
     root1(tree1),
     root2(tree2)
@@ -136,9 +141,9 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 		    if (jp > 1) {
 		        Forrest gprev(gipjp);
 			if (twist) {
-			    gprev.pop_right_root();
+			    gprev.pop_back_root();
 			} else {
-			    gprev.pop_left_root();
+			    gprev.pop_front_root();
 			}
 
 			Answer b = s.get(fkp, gprev);
@@ -148,8 +153,8 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 			}
 		    }
 
-		    INode *v = twist ? fkp.get_right() : fkp.get_left();
-		    INode *w = twist ? gipjp.get_right() : gipjp.get_left();
+		    INode *v = get_edge(fkp, twist);
+		    INode *w = get_edge(gipjp, twist);
 		    TRACE2(detail, "v = " << v << ", w = " << w);
 		    if (v->equals(w)) {
 			Answer c;
@@ -160,8 +165,7 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 				const Answer *cp = s.try_get(fstem, gstem);
 				c = cp ? *cp : fanPad.get(gstem);
 			    } else { // v isn't on the heavy path
-				c = swap ? stemTable.get(w, v) :
-				    stemTable.get(v, w);
+				c = stemTable.get(v, w, swap);
 			    }
 			}
 
@@ -169,11 +173,11 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 			    Forrest fold(fkp);
 			    Forrest gold(gipjp);
 			    if (twist) {
-			        fold.pop_right_tree();
-				gold.pop_right_tree();
+			        fold.pop_back_tree();
+				gold.pop_back_tree();
 			    } else {
-			        fold.pop_left_tree();
-				gold.pop_left_tree();
+			        fold.pop_front_tree();
+				gold.pop_front_tree();
 			    }
 
 			    Answer d = s.get(fold, gold);
@@ -209,9 +213,9 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 		    if (!f0vp.is_empty()) {
 		        Forrest gprev(gipjp);
 			if (twist) {
-			    gprev.pop_right_root();
+			    gprev.pop_back_root();
 			} else {
-			    gprev.pop_left_root();
+			    gprev.pop_front_root();
 			}
 
 			if (!gprev.is_empty()) {
@@ -219,11 +223,7 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 			}
 		    }
 
-		    if (swap) {
-			stemTable.insert(gipjp.get_left(), parent, e);
-		    } else {
-			stemTable.insert(parent, gipjp.get_left(), e);
-		    }
+		    stemTable.insert(parent, gipjp.get_front(), swap, e);
 		}
 	    }
 	}

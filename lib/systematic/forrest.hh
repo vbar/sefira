@@ -42,18 +42,22 @@ public:
     }
 
     // can't be called on empty forrest
-    INode *get_left() const;
+    INode *get_front() const;
 
     // can't be called on empty forrest
-    INode *get_right() const;
+    INode *get_back() const;
 
-    INode *pop_left_root();
+    // can't be called on empty forrest
+    INode *pop_front_root();
 
-    INode *pop_right_root();
+    // can't be called on empty forrest
+    INode *pop_back_root();
 
-    INode *pop_left_tree();
+    // can't be called on empty forrest
+    INode *pop_front_tree();
 
-    INode *pop_right_tree();
+    // can't be called on empty forrest
+    INode *pop_back_tree();
 
     static Forrest emptyForrest;
 

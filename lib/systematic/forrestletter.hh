@@ -25,8 +25,8 @@ public:
 
     bool operator==(const ForrestLetter &other) const;
 
-    INode *pop_right_root();
-    INode *pop_right_tree();
+    INode *pop_back_root();
+    INode *pop_back_tree();
 
     void append_children(INode *node);
 
