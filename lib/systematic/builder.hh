@@ -32,9 +32,7 @@ private:
     void compute_lcs(INode *f, INode *g);
     INode *do_top_light(INode *f, INode *g, bool swap);
     void compute_period(INode *f, INode *g, INode *parent,
-			bool swap);
-    void compute_period_mirror(INode *f, INode *g, INode *parent,
-			       bool swap);
+			bool swap, bool twist);
 };
 
 }
