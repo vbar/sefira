@@ -33,7 +33,10 @@ void SmallRightEnum::add_one(const Forrest &forrest,
         const TLeafMap &map,
 	TKnownSet &set)
 {
-    TRACE1("enter add_one(" << forrest << ", " << sz << "... )");
+    if (set.find(forrest) != set.end()) {
+        return;
+    }
+
     INode *leaf = forrest.get_right();
     INode *left = leaf->get_left();
     INode *right = leaf->get_right();
@@ -43,8 +46,7 @@ void SmallRightEnum::add_one(const Forrest &forrest,
 	right = leaf->get_right();
     }
 
-    cond_add_index(forrest, leaf, sz, map, set);
-    TRACE1("exit add_one");
+    add_unknown_index(forrest, leaf, sz, map, set);
 }
 
 }

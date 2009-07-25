@@ -92,13 +92,9 @@ SmallEnumBase::TRange SmallEnumBase::get_range(TNodeIndex n, TNodeIndex sz) cons
     return rng;
 }
 
-void SmallEnumBase::cond_add_index(const Forrest &forrest, INode *leaf,
+void SmallEnumBase::add_unknown_index(const Forrest &forrest, INode *leaf,
         TNodeIndex sz, const TLeafMap &map, TKnownSet &set)
 {
-    if (set.find(forrest) != set.end()) {
-        return;
-    }
-
     TLeafMap::const_iterator i = map.find(leaf);
     if (i == map.end()) {
         std::stringstream ss;

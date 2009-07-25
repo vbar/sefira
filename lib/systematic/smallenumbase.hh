@@ -56,7 +56,7 @@ private:
 	TNodeIndex sz, const TLeafMap &map, TKnownSet &set);
 
 protected:
-    void cond_add_index(const Forrest &forrest, INode *leaf,
+    void add_unknown_index(const Forrest &forrest, INode *leaf,
 	TNodeIndex sz, const TLeafMap &map, TKnownSet &set);
 
     static void add_leaf(INode *node, TLeafMap &map);
