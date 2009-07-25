@@ -1,13 +1,11 @@
 #include "builder.hh"
 #include "answer.hh"
-#include "bigleftenum.hh"
-#include "bigrightenum.hh"
+#include "bigenum.hh"
 #include "dynapad.hh"
 #include "forrest.hh"
 #include "inode.hh"
 #include "smallenum.hh"
-#include "smallleftenum.hh"
-#include "smallrightenum.hh"
+#include "smallenumbase.hh"
 #include <assert.h>
 
 #define NOTRACE
@@ -112,13 +110,13 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
         bool swap)
 {
     TRACE2(overview, "enter compute_period(" << f << ", " << g << ", " << parent << ", " << swap << ')');
-    BigLeftEnum fe(parent);
+    BigEnum fe(parent, false);
     short k = fe.get_size() - 1;
     assert(k > 0);
     Forrest fvp = fe.get(k);
     Forrest f0vp = fe.get(k - 1);
  
-    SmallRightEnum ge(swap ? f : g);
+    SmallEnum ge(swap ? f : g, false);
     short i = ge.get_max_leaf();
 
     for (short ip = 1; ip <= i; ++ip) {
@@ -126,8 +124,8 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
         DynaPad s;
 	for (short kp = 1; kp <= k; ++kp) {
 	    for (short jp = 1; jp <= jip; ++jp) {
-	        SmallEnum::TRange rng = ge.get_range(ip, jp);
-		for (SmallEnum::TConstIterator l = rng.first;
+	        SmallEnumBase::TRange rng = ge.get_range(ip, jp);
+		for (SmallEnumBase::TConstIterator l = rng.first;
 		     l != rng.second;
 		     ++l) {
 		    Forrest gipjp = l->second;
@@ -206,8 +204,8 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 	}
 
 	for (short jp = 1; jp <= jip; ++jp) {
-	    SmallEnum::TRange rng = ge.get_range(ip, jp);
-	    for (SmallEnum::TConstIterator l = rng.first;
+	    SmallEnumBase::TRange rng = ge.get_range(ip, jp);
+	    for (SmallEnumBase::TConstIterator l = rng.first;
 		 l != rng.second;
 		 ++l) {
 	        Forrest gipjp = l->second;
@@ -240,13 +238,13 @@ void Builder::compute_period_mirror(INode *f, INode *g, INode *parent,
         bool swap)
 {
     TRACE2(overview, "enter compute_period_mirror(" << f << ", " << g << ", " << parent << ", " << swap << ')');
-    BigRightEnum fe(parent);
+    BigEnum fe(parent, true);
     short k = fe.get_size() - 1;
     assert(k > 0);
     Forrest fvp = fe.get(k);
     Forrest f0vp = fe.get(k - 1);
 
-    SmallLeftEnum ge(swap ? f : g);
+    SmallEnum ge(swap ? f : g, true);
     short i = ge.get_max_leaf();
 
     for (short ip = 1; ip <= i; ++ip) {
@@ -254,9 +252,9 @@ void Builder::compute_period_mirror(INode *f, INode *g, INode *parent,
         DynaPad s;
 	for (short kp = 1; kp <= k; ++kp) {
 	    for (short jp = 1; jp <= jip; ++jp) {
-	        SmallEnum::TRange rng = ge.get_range(ip, jp);
+	        SmallEnumBase::TRange rng = ge.get_range(ip, jp);
 		assert(rng.first != rng.second);
-		for (SmallEnum::TConstIterator l = rng.first;
+		for (SmallEnumBase::TConstIterator l = rng.first;
 		     l != rng.second;
 		     ++l) {
 		    Forrest gipjp = l->second;
@@ -336,9 +334,9 @@ void Builder::compute_period_mirror(INode *f, INode *g, INode *parent,
 	}
 
 	for (short jp = 1; jp <= jip; ++jp) {
-	    SmallEnum::TRange rng = ge.get_range(ip, jp);
+	    SmallEnumBase::TRange rng = ge.get_range(ip, jp);
 	    assert(rng.first != rng.second);
-	    for (SmallEnum::TConstIterator l = rng.first;
+	    for (SmallEnumBase::TConstIterator l = rng.first;
 		 l != rng.second;
 		 ++l) {
 	        Forrest gipjp = l->second;

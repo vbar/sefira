@@ -1,34 +1,31 @@
 #ifndef systematic_bigenum_hh
 #define systematic_bigenum_hh
 
-#include <ostream>
-#include <vector>
-#include "forrest.hh"
+#include "bigenumbase.hh"
+#include "envelope.hh"
 #include "nodeindex.hh"
 
 namespace systematic {
 
-class BigEnum
+class Forrest;
+class INode;
+
+class BigEnum : private Envelope<BigEnumBase>
 {
-    friend std::ostream &operator<<(std::ostream &os, const BigEnum &be);
-protected:
-    typedef std::vector<Forrest> TEnum;
-
-    bool emptyEdge;
-    TEnum seq;
-
 public:
-    BigEnum();
-    virtual ~BigEnum();
+    BigEnum(INode *parent, bool twist);
 
-    TNodeIndex get_size() const;
+    TNodeIndex get_size() const
+    {
+        return get_letter()->get_size();
+    }
 
-    Forrest get(TNodeIndex idx);
+    Forrest get(TNodeIndex idx) const
+    {
+        return get_letter()->get(idx);
+    }
 };
-
-std::ostream &operator<<(std::ostream &os, const BigEnum &be);
 
 }
 
 #endif
-

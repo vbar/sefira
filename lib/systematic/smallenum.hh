@@ -1,56 +1,32 @@
 #ifndef systematic_smallenum_hh
 #define systematic_smallenum_hh
 
-#include <map>
-#include <ostream>
-#include <set>
-#include <utility>
-#include "forrest.hh"
+#include "envelope.hh"
 #include "nodeindex.hh"
+#include "smallenumbase.hh"
 
 namespace systematic {
 
-class INode;
-
-class SmallEnum
+class SmallEnum : private Envelope<SmallEnumBase>
 {
-    friend std::ostream &operator<<(std::ostream &os, const SmallEnum &se);
-protected:
-    typedef std::map<INode *, TNodeIndex> TLeafMap;
-    typedef std::set<Forrest> TKnownSet;
-
 public:
-    typedef std::pair<TNodeIndex, TNodeIndex> TIndex;
-    typedef std::multimap<TIndex, Forrest> TMatrix;
-    typedef TMatrix::const_iterator TConstIterator;
-    typedef std::pair<TConstIterator, TConstIterator> TRange;
-
-protected:
-    TNodeIndex leafCount;
-    TNodeIndex *maxSize;
-    TMatrix matrix;
-
-public:
-    SmallEnum();
-    virtual ~SmallEnum();
+    SmallEnum(INode *root, bool twist);
 
     TNodeIndex get_max_leaf() const
     {
-        return leafCount;
+        return get_letter()->get_max_leaf();
     }
 
-    TNodeIndex get_max_size(TNodeIndex n) const;
+    TNodeIndex get_max_size(TNodeIndex n) const
+    {
+        return get_letter()->get_max_size(n);
+    }
 
-    TRange get_range(TNodeIndex n, TNodeIndex sz) const;
-
-protected:
-    void cond_add_index(const Forrest &forrest, INode *leaf,
-	TNodeIndex sz, const TLeafMap &map, TKnownSet &set);
-
-    static void add_leaf(INode *node, TLeafMap &map);
+    SmallEnumBase::TRange get_range(TNodeIndex n, TNodeIndex sz) const
+    {
+        return get_letter()->get_range(n, sz);
+    }
 };
-
-std::ostream &operator<<(std::ostream &os, const SmallEnum &se);
 
 }
 
