@@ -42,6 +42,12 @@ inline static TKernel make_node_kernel(INode *node)
     return TKernel(inorder, inorder);
 }
 
+inline static TSubProblem make_sub_problem(INode *v, INode *w, bool swap)
+{
+    return swap ? TSubProblem(w->get_inorder(), v->get_inorder()) :
+        TSubProblem(v->get_inorder(), w->get_inorder());
+}
+
 Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
     root1(tree1),
     root2(tree2)
@@ -193,7 +199,8 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 				    gsk);
 				c = cp ? *cp : fanPad.get(gsk);
 			    } else { // v isn't on the heavy path
-				c = stemTable.get(v, w, swap);
+			        c = stemTable.get(
+                                    make_sub_problem(v, w, swap));
 			    }
 			}
 
@@ -253,7 +260,9 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 			}
 		    }
 
-		    stemTable.insert(parent, gipjp.get_front(), swap, e);
+		    stemTable.insert(
+			make_sub_problem(parent, gipjp.get_front(), swap),
+			e);
 		}
 	    }
 	}

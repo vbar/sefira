@@ -8,41 +8,26 @@
 
 namespace systematic {
 
+typedef std::pair<TNodeIndex, TNodeIndex> TSubProblem;
+
 class INode;
 
-// maps pairs of (binary) nodes to the LCS of the forrests under them
+// maps pairs of nodes (identified by their indices) to the LCS of the
+// forrests under them
 class StemTable
 {
-    friend std::ostream &operator<<(std::ostream &os, const StemTable &t);
 private:
-    typedef std::map<std::pair<INode *, INode *>, Answer> TMap;
+    typedef std::map<TSubProblem, Answer> TMap;
 
     TMap table;
 
-    Answer get(INode *v, INode *w) const;
-
-    void insert(INode *v, INode *w, const Answer &a);
-
-public:
-
+public:    
     // trying to retrieve an answer which hasn't been inserted before
     // is an error
-    Answer get(INode *v, INode *w, bool swap) const
-    {
-        return swap ? get(w, v) : get(v, w);
-    }
+    Answer get(TSubProblem sp) const;
 
-    void insert(INode *v, INode *w, bool swap, const Answer &a)
-    {
-        if (swap) {
-	    insert(w, v, a);
-	} else {
-	    insert(v, w, a);
-	}
-    }
+    void insert(TSubProblem sp, const Answer &a);
 };
-
-std::ostream &operator<<(std::ostream &os, const StemTable &t);
 
 }
 
