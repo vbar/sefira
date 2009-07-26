@@ -10,7 +10,7 @@
 
 namespace systematic {
 
-Answer StemTable::get(TSubProblem sp) const
+RelResult StemTable::get(TSubProblem sp) const
 {
     TMap::const_iterator i = table.find(sp);
     if (i == table.end()) {
@@ -23,11 +23,11 @@ Answer StemTable::get(TSubProblem sp) const
     return i->second;
 }
 
-void StemTable::insert(TSubProblem sp, const Answer &a)
+void StemTable::insert(TSubProblem sp, const RelResult &rr)
 {
-    TRACE1("stemTable" << sp << " := " << a);
+    TRACE1("stemTable" << sp << " := " << rr);
     std::pair<TMap::iterator, bool> inres = table.insert(
-	TMap::value_type(sp, a));
+	TMap::value_type(sp, rr));
     if (!inres.second) {
         throw std::logic_error("repeated insert");
     }

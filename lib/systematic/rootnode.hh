@@ -4,6 +4,7 @@
 #include <libxml/tree.h>
 #include "annode.hh"
 #include "nodefactory.hh"
+#include "treetable.hh"
 
 namespace systematic {
 
@@ -15,6 +16,7 @@ class RootNode : public AnNode
 {
 private:
     NodeFactory factory;
+    TreeTable treeTable;
     xmlNodePtr inner;
     INode *left;
     INode *right;
@@ -22,6 +24,11 @@ private:
 public:
     RootNode(xmlNodePtr root);
     virtual ~RootNode();
+
+    xmlNodePtr get_at(TNodeIndex idx)
+    {
+        return treeTable.get(idx);
+    }
 
     virtual bool equals(INode *other);
 

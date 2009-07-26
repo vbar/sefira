@@ -1,6 +1,7 @@
 #include "annode.hh"
 #include "compare.hh"
 #include "inodefactory.hh"
+#include "treetable.hh"
 #include <stdexcept>
 #include <assert.h>
 
@@ -27,7 +28,7 @@ TNodeIndex AnNode::get_inorder()
     return inorder;
 }
 
-TNodeIndex AnNode::fill(TNodeIndex before)
+TNodeIndex AnNode::fill(TNodeIndex before, TreeTable &tt)
 {
     if (inorder > 0) {
         throw std::logic_error("fill called twice");
@@ -35,17 +36,19 @@ TNodeIndex AnNode::fill(TNodeIndex before)
 
     INode *left = get_left();
     if (left) {
-        inorder = left->fill(before);
+        inorder = left->fill(before, tt);
 	assert(inorder > before);
 	size += (inorder - before);
     } else {
         inorder = before;
     }
 
+    tt.insert(get_inner());
+
     INode *right = get_right();
     TNodeIndex after;
     if (right) {
-        after = right->fill(inorder + 1);
+        after = right->fill(inorder + 1, tt);
 	size += (after - inorder - 1);
     } else {
         after = inorder + 1;

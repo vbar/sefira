@@ -7,7 +7,7 @@
 
 namespace systematic {
 
-Answer DynaPad::get(TKernel f, TKernel g) const
+RelResult DynaPad::get(TKernel f, TKernel g) const
 {
     TMap::const_iterator i = map.find(TIndex(f, g));
     if (i == map.end()) {
@@ -20,7 +20,7 @@ Answer DynaPad::get(TKernel f, TKernel g) const
     return i->second;
 }
 
-const Answer *DynaPad::try_get(TKernel f, TKernel g) const
+const RelResult *DynaPad::try_get(TKernel f, TKernel g) const
 {
     TMap::const_iterator i = map.find(TIndex(f, g));
     if (i == map.end()) {
@@ -32,10 +32,10 @@ const Answer *DynaPad::try_get(TKernel f, TKernel g) const
     }
 }
 
-void DynaPad::set(TKernel f, TKernel g, const Answer &a)
+void DynaPad::set(TKernel f, TKernel g, const RelResult &rr)
 {
-    TRACE1("dynaPad(" << f << ", " << g << ") := " << a.get_score());
-    map[TIndex(f, g)] = a;
+    TRACE1("dynaPad(" << f << ", " << g << ") := " << rr.get_score());
+    map[TIndex(f, g)] = rr;
 }
 
 }

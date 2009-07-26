@@ -3,7 +3,7 @@
 
 #include <map>
 #include <utility>
-#include "answer.hh"
+#include "relresult.hh"
 #include "forrest.hh"
 
 namespace systematic {
@@ -12,16 +12,16 @@ class DynaPad
 {
 private:
     typedef std::pair<TKernel, TKernel> TIndex;
-    typedef std::map<TIndex, Answer> TMap;
+    typedef std::map<TIndex, RelResult> TMap;
 
     TMap map;
 
 public:
-    Answer get(TKernel f, TKernel g) const;
+    RelResult get(TKernel f, TKernel g) const;
 
-    const Answer *try_get(TKernel f, TKernel g) const;
+    const RelResult *try_get(TKernel f, TKernel g) const;
 
-    void set(TKernel f, TKernel g, const Answer &a);
+    void set(TKernel f, TKernel g, const RelResult &rr);
 };
 
 }

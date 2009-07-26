@@ -4,7 +4,7 @@
 #include <map>
 #include <ostream>
 #include "forrest.hh"
-#include "answer.hh"
+#include "relresult.hh"
 
 namespace systematic {
 
@@ -14,16 +14,16 @@ class FanPad
 {
     friend std::ostream &operator<<(std::ostream &os, const FanPad &f);
 private:
-    typedef std::map<TKernel, Answer> TMap;
+    typedef std::map<TKernel, RelResult> TMap;
 
     TMap pad;
 
 public:
     // trying to retrieve an answer which hasn't been inserted before
     // returns an empty one
-    Answer get(TKernel f) const;
+    RelResult get(TKernel f) const;
 
-    void set(TKernel f, const Answer &a);
+    void set(TKernel f, const RelResult &rr);
 
     void clear()
     {

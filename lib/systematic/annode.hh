@@ -8,6 +8,7 @@
 namespace systematic {
 
 class INodeFactory;
+class TreeTable;
 
 // Metadata ("annotations") common to all binary nodes.
 class AnNode : public INode
@@ -25,7 +26,7 @@ public:
 
     virtual TNodeIndex get_inorder();
 
-    virtual TNodeIndex fill(TNodeIndex before);
+    virtual TNodeIndex fill(TNodeIndex before, TreeTable &tt);
 
 protected:
     INode *make_real_left(INodeFactory &factory, xmlNodePtr inner);

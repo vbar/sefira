@@ -7,6 +7,8 @@
 
 namespace systematic {
 
+class TreeTable;
+
 // an interface of the binary node (either backed by a real XML node,
 // or an extra one inserted to make the tree binary)
 class INode
@@ -34,7 +36,7 @@ public:
 
     virtual void dump(std::ostream &os, int level) const = 0;
 
-    virtual TNodeIndex fill(TNodeIndex before) = 0;
+    virtual TNodeIndex fill(TNodeIndex before, TreeTable &tt) = 0;
 };
 
 std::ostream &operator<<(std::ostream &os, const INode &node);

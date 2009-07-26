@@ -4,7 +4,7 @@
 #include <map>
 #include <ostream>
 #include <utility>
-#include "answer.hh"
+#include "relresult.hh"
 
 namespace systematic {
 
@@ -17,16 +17,16 @@ class INode;
 class StemTable
 {
 private:
-    typedef std::map<TSubProblem, Answer> TMap;
+    typedef std::map<TSubProblem, RelResult> TMap;
 
     TMap table;
 
 public:    
     // trying to retrieve an answer which hasn't been inserted before
     // is an error
-    Answer get(TSubProblem sp) const;
+    RelResult get(TSubProblem sp) const;
 
-    void insert(TSubProblem sp, const Answer &a);
+    void insert(TSubProblem sp, const RelResult &rr);
 };
 
 }

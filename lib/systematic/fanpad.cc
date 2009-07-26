@@ -8,22 +8,22 @@
 
 namespace systematic {
 
-Answer FanPad::get(TKernel f) const
+RelResult FanPad::get(TKernel f) const
 {
     TMap::const_iterator i = pad.find(f);
     if (i == pad.end()) {
         TRACE1("fanPad(" << f << ") is empty");
-        return Answer();
+        return RelResult();
     } else {
         TRACE1("fanPad(" << f << ") is " << i->second.get_score());
         return i->second;
     }
 }
 
-void FanPad::set(TKernel f, const Answer &a)
+void FanPad::set(TKernel f, const RelResult &rr)
 {
-    TRACE1("fanPad(" << f << ") := " << a.get_score());
-    pad[f] = a;
+    TRACE1("fanPad(" << f << ") := " << rr.get_score());
+    pad[f] = rr;
 }
 
 std::ostream &operator<<(std::ostream &os, const FanPad &f)

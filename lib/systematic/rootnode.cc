@@ -9,7 +9,7 @@ RootNode::RootNode(xmlNodePtr root):
     left(make_real_left(factory, root)),
     right(make_real_right(factory, root))
 {
-    fill(0);
+    fill(0, treeTable);
 }
 
 RootNode::~RootNode()

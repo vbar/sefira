@@ -4,6 +4,7 @@
 #include "dynapad.hh"
 #include "forrest.hh"
 #include "inode.hh"
+#include "relresult.hh"
 #include "smallenum.hh"
 #include "smallenumbase.hh"
 #include <assert.h>
@@ -61,7 +62,19 @@ Answer Builder::get_lcs()
     compute_lcs(&root1, &root2);
 
     bool swap = root1.get_size() < root2.get_size();
-    return fanPad.get(make_node_kernel(swap ? &root1 : &root2));
+    RelResult r = fanPad.get(make_node_kernel(swap ? &root1 : &root2));
+
+    Answer a;
+    for (RelResult::TSet::const_iterator i = r.begin();
+	 i != r.end();
+	 ++i)
+    {
+	xmlNodePtr n = root1.get_at(*i);
+	assert(n);
+	a.insert(n);
+    }
+
+    return a;
 }
 
 void Builder::compute_lcs(INode *f, INode *g)
@@ -155,7 +168,7 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 		     l != rng.second;
 		     ++l) {
 		    Forrest gipjp = l->second;
-		    Answer a;
+		    RelResult a;
 		    Forrest fprev = fe.get(kp - 1);
 		    if (!fprev.is_empty()) {
 		        TKernel gk = gipjp.get_kernel();
@@ -177,8 +190,9 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 			}
 
 			if (!gprev.is_empty()) {
-			    Answer b = s.get(fkp.get_kernel(),
-					     gprev.get_kernel());
+			    RelResult b = s.get(
+                                fkp.get_kernel(),
+				gprev.get_kernel());
 			    TRACE2(detail, "b(" << fkp << ", " << gprev << ") = " << b);
 			    if (a.get_score() < b.get_score()) {
 				a = b;
@@ -190,11 +204,11 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 		    INode *w = get_edge(gipjp, twist);
 		    TRACE2(detail, "v = " << v << ", w = " << w);
 		    if (v->equals(w)) {
-			Answer c;
+			RelResult c;
 			if (!v->is_leaf() && !w->is_leaf()) {
 			    if (kp == k) {
 			        TKernel gsk = make_stem_kernel(w);
-				const Answer *cp = s.try_get(
+				const RelResult *cp = s.try_get(
 				    make_stem_kernel(v),
 				    gsk);
 				c = cp ? *cp : fanPad.get(gsk);
@@ -215,14 +229,14 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 				gold.pop_front_tree();
 			    }
 
-			    Answer d = s.get(fold.get_kernel(),
+			    RelResult d = s.get(fold.get_kernel(),
                                 gold.get_kernel());
 			    c.insert(d);
 			    TRACE2(detail, "c+d = " << c);
 			}
 
 			INode *first = swap ? w : v;
-			c.insert(first->get_inner());
+			c.insert(first->get_inorder());
 			TRACE2(detail, "final c = " << c);
 
 			if (a.get_score() < c.get_score()) {
@@ -246,7 +260,7 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 		fanPad.set(gk, s.get(fvp.get_kernel(), gk));
 
 		if (gipjp.is_tree()) {
-		    Answer e;
+		    RelResult e;
 		    if (!f0vp.is_empty()) {
 		        Forrest gprev(gipjp);
 			if (twist) {
