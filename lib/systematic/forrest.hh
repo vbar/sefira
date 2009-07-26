@@ -1,11 +1,15 @@
 #ifndef systematic_forrest_hh
 #define systematic_forrest_hh
 
+#include <ostream>
+#include <utility>
 #include "envelope.hh"
 #include "forrestletter.hh"
-#include <ostream>
+#include "nodeindex.hh"
 
 namespace systematic {
+
+typedef std::pair<TNodeIndex, TNodeIndex> TKernel;
 
 class INode;
 
@@ -48,6 +52,9 @@ public:
     INode *get_back() const;
 
     // can't be called on empty forrest
+    TKernel get_kernel() const;
+
+    // can't be called on empty forrest
     INode *pop_front_root();
 
     // can't be called on empty forrest
@@ -65,6 +72,8 @@ private:
     void do_insert(const Forrest &other);
     void ensure_single();
 };
+
+std::ostream &operator<<(std::ostream &os, TKernel k);
 
 std::ostream &operator<<(std::ostream &os, const Forrest &f);
 

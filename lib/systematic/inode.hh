@@ -19,6 +19,8 @@ public:
 
     virtual TNodeIndex get_size() = 0;
 
+    virtual TNodeIndex get_inorder() = 0;
+
     // other must not be null
     virtual bool equals(INode *other) = 0;
 
@@ -31,6 +33,8 @@ public:
     virtual INode *get_right() = 0;
 
     virtual void dump(std::ostream &os, int level) const = 0;
+
+    virtual TNodeIndex fill(TNodeIndex before) = 0;
 };
 
 std::ostream &operator<<(std::ostream &os, const INode &node);

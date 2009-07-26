@@ -8,7 +8,7 @@
 
 namespace systematic {
 
-Answer FanPad::get(const Forrest &f) const
+Answer FanPad::get(TKernel f) const
 {
     TMap::const_iterator i = pad.find(f);
     if (i == pad.end()) {
@@ -20,7 +20,7 @@ Answer FanPad::get(const Forrest &f) const
     }
 }
 
-void FanPad::set(const Forrest &f, const Answer &a)
+void FanPad::set(TKernel f, const Answer &a)
 {
     TRACE1("fanPad(" << f << ") := " << a.get_score());
     pad[f] = a;

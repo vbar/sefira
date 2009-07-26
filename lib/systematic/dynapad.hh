@@ -11,17 +11,17 @@ namespace systematic {
 class DynaPad
 {
 private:
-    typedef std::pair<Forrest, Forrest> TIndex;
+    typedef std::pair<TKernel, TKernel> TIndex;
     typedef std::map<TIndex, Answer> TMap;
 
     TMap map;
 
 public:
-    Answer get(const Forrest &f, const Forrest &g) const;
+    Answer get(TKernel f, TKernel g) const;
 
-    const Answer *try_get(const Forrest &f, const Forrest &g) const;
+    const Answer *try_get(TKernel f, TKernel g) const;
 
-    void set(const Forrest &f, const Forrest &g, const Answer &a);
+    void set(TKernel f, TKernel g, const Answer &a);
 };
 
 }

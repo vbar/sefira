@@ -1,7 +1,6 @@
 #include "rootnode.hh"
 #include "inodefactory.hh"
 #include "xutil.hh"
-#include <assert.h>
 
 namespace systematic {
 
@@ -10,7 +9,7 @@ RootNode::RootNode(xmlNodePtr root):
     left(make_real_left(factory, root)),
     right(make_real_right(factory, root))
 {
-    assert(root);
+    fill(0);
 }
 
 RootNode::~RootNode()

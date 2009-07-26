@@ -39,6 +39,28 @@ TNodeIndex AnNode::get_size()
     return size;
 }
 
+TNodeIndex AnNode::get_inorder()
+{
+    return inorder;
+}
+
+TNodeIndex AnNode::fill(TNodeIndex before)
+{
+    INode *left = get_left();
+    if (left) {
+        inorder = left->fill(before);
+    } else {
+        inorder = before;
+    }
+
+    INode *right = get_right();
+    if (right) {
+        return right->fill(inorder + 1);
+    } else {
+        return inorder + 1;
+    }
+}
+
 INode *AnNode::make_real_left(INodeFactory &factory, xmlNodePtr inner)
 {
     xmlNodePtr ch = inner->children;

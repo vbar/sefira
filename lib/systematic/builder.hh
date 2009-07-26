@@ -10,7 +10,6 @@ class Answer;
 
 namespace systematic {
 
-class Forrest;
 class INode;
 
 class Builder

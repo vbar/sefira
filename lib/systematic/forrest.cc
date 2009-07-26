@@ -1,4 +1,5 @@
 #include "forrest.hh"
+#include "inode.hh"
 #include <algorithm>
 #include <sstream>
 #include <stdexcept>
@@ -54,6 +55,17 @@ INode *Forrest::get_back() const
     }
 
     return letter->treeTops.back();
+}
+
+TKernel Forrest::get_kernel() const
+{
+    const ForrestLetter *letter = get_letter();
+    if (letter->treeTops.empty()) {
+        throw std::logic_error("empty forrest doesn't need a kernel");
+    }
+
+    return TKernel(letter->treeTops[0]->get_inorder(),
+		   letter->treeTops.back()->get_inorder());
 }
 
 INode *Forrest::pop_front_root()
@@ -147,6 +159,12 @@ void Forrest::ensure_single()
 	spare.do_insert(*this);
 	swap(spare);
     }
+}
+
+std::ostream &operator<<(std::ostream &os, TKernel k)
+{
+    os << '(' << k.first << ", " << k.second << ')';
+    return os;
 }
 
 std::ostream &operator<<(std::ostream &os, const Forrest &f)

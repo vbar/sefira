@@ -14,16 +14,16 @@ class FanPad
 {
     friend std::ostream &operator<<(std::ostream &os, const FanPad &f);
 private:
-    typedef std::map<Forrest, Answer> TMap;
+    typedef std::map<TKernel, Answer> TMap;
 
     TMap pad;
 
 public:
     // trying to retrieve an answer which hasn't been inserted before
     // returns an empty one
-    Answer get(const Forrest &f) const;
+    Answer get(TKernel f) const;
 
-    void set(const Forrest &f, const Answer &a);
+    void set(TKernel f, const Answer &a);
 
     void clear()
     {

@@ -21,6 +21,27 @@ inline static INode *get_edge(const Forrest &forrest, bool twist)
     return twist ? forrest.get_back() : forrest.get_front();
 }
 
+// duplicates a Forrest constructor + a call to get_kernel, for the
+// case when a Forrest instance isn't really necessary
+static TKernel make_stem_kernel(INode *tip)
+{
+    INode *left = tip->get_left();
+    INode *right = tip->get_right();
+    if (!left) {
+        left = right;
+    } else if (!right) {
+        right = left;
+    }
+
+    return TKernel(left->get_inorder(), right->get_inorder());
+}
+
+inline static TKernel make_node_kernel(INode *node)
+{
+    TNodeIndex inorder = node->get_inorder();
+    return TKernel(inorder, inorder);
+}
+
 Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
     root1(tree1),
     root2(tree2)
@@ -34,8 +55,7 @@ Answer Builder::get_lcs()
     compute_lcs(&root1, &root2);
 
     bool swap = root1.get_size() < root2.get_size();
-    Forrest small(swap ? &root1 : &root2);
-    return fanPad.get(small);
+    return fanPad.get(make_node_kernel(swap ? &root1 : &root2));
 }
 
 void Builder::compute_lcs(INode *f, INode *g)
@@ -55,7 +75,7 @@ void Builder::compute_lcs(INode *f, INode *g)
 	parent = parent->get_parent();
     }
 
-    TRACE2(overview, "LCS = " << fanPad.get(swap ? f : g));
+    TRACE2(overview, "LCS = " << fanPad.get(make_node_kernel(swap ? f : g)));
 }
 
 INode *Builder::do_top_light(INode *f, INode *g, bool swap)
@@ -131,10 +151,13 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 		    Forrest gipjp = l->second;
 		    Answer a;
 		    if (kp == 1) {
-		        a = fanPad.get(gipjp);
-			s.set(fe.get(kp - 1), gipjp, a);
+		        a = fanPad.get(gipjp.get_kernel());
+			// s.set(fe.get(kp - 1), gipjp, a);
 		    } else {
-		        a = s.get(fe.get(kp - 1), gipjp);
+		        Forrest fprev(fe.get(kp - 1));
+			if (!fprev.is_empty()) {
+			    a = s.get(fprev.get_kernel(), gipjp.get_kernel());
+			}
 		    }
 
 		    Forrest fkp = fe.get(kp);
@@ -146,10 +169,13 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 			    gprev.pop_front_root();
 			}
 
-			Answer b = s.get(fkp, gprev);
-			TRACE2(detail, "b(" << fkp << ", " << gprev << ") = " << b);
-			if (a.get_score() < b.get_score()) {
-			    a = b;
+			if (!gprev.is_empty()) {
+			    Answer b = s.get(fkp.get_kernel(),
+					     gprev.get_kernel());
+			    TRACE2(detail, "b(" << fkp << ", " << gprev << ") = " << b);
+			    if (a.get_score() < b.get_score()) {
+				a = b;
+			    }
 			}
 		    }
 
@@ -160,10 +186,11 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 			Answer c;
 			if (!v->is_leaf() && !w->is_leaf()) {
 			    if (kp == k) {
-			        Forrest fstem(v->get_left(), v->get_right());
-				Forrest gstem(w->get_left(), w->get_right());
-				const Answer *cp = s.try_get(fstem, gstem);
-				c = cp ? *cp : fanPad.get(gstem);
+			        TKernel gsk = make_stem_kernel(w);
+				const Answer *cp = s.try_get(
+				    make_stem_kernel(v),
+				    gsk);
+				c = cp ? *cp : fanPad.get(gsk);
 			    } else { // v isn't on the heavy path
 				c = stemTable.get(v, w, swap);
 			    }
@@ -180,7 +207,8 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 				gold.pop_front_tree();
 			    }
 
-			    Answer d = s.get(fold, gold);
+			    Answer d = s.get(fold.get_kernel(),
+                                gold.get_kernel());
 			    c.insert(d);
 			    TRACE2(detail, "c+d = " << c);
 			}
@@ -195,7 +223,7 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 		    }
 
 		    TRACE2(detail, "final a = " << a);
-		    s.set(fkp, gipjp, a);
+		    s.set(fkp.get_kernel(), gipjp.get_kernel(), a);
 		}
 	    }
 	}
@@ -206,7 +234,8 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 		 l != rng.second;
 		 ++l) {
 	        Forrest gipjp = l->second;
-		fanPad.set(gipjp, s.get(fvp, gipjp));
+		TKernel gk = gipjp.get_kernel();
+		fanPad.set(gk, s.get(fvp.get_kernel(), gk));
 
 		if (gipjp.is_tree()) {
 		    Answer e;
@@ -219,7 +248,7 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 			}
 
 			if (!gprev.is_empty()) {
-			    e = s.get(f0vp, gprev);
+			    e = s.get(f0vp.get_kernel(), gprev.get_kernel());
 			}
 		    }
 
