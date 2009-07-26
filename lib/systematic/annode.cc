@@ -2,11 +2,13 @@
 #include "compare.hh"
 #include "inodefactory.hh"
 #include <stdexcept>
+#include <assert.h>
 
 namespace systematic {
 
 AnNode::AnNode():
-    size(0)
+    size(1),
+    inorder(0)
 {
 }
 
@@ -17,25 +19,6 @@ bool AnNode::is_leaf()
 
 TNodeIndex AnNode::get_size()
 {
-    if (!size) {
-	int sz = 1;
-
-	INode *left = get_left();
-	if (left) {
-	    sz += left->get_size();
-	}
-
-	INode *right = get_right();
-	if (right) {
-	    sz += right->get_size();
-	}
-
-	size = sz;
-	if (size != sz) {
-	    throw std::range_error("tree too large");
-	}
-    }
-
     return size;
 }
 
@@ -46,19 +29,29 @@ TNodeIndex AnNode::get_inorder()
 
 TNodeIndex AnNode::fill(TNodeIndex before)
 {
+    if (inorder > 0) {
+        throw std::logic_error("fill called twice");
+    }
+
     INode *left = get_left();
     if (left) {
         inorder = left->fill(before);
+	assert(inorder > before);
+	size += (inorder - before);
     } else {
         inorder = before;
     }
 
     INode *right = get_right();
+    TNodeIndex after;
     if (right) {
-        return right->fill(inorder + 1);
+        after = right->fill(inorder + 1);
+	size += (after - inorder - 1);
     } else {
-        return inorder + 1;
+        after = inorder + 1;
     }
+
+    return after;
 }
 
 INode *AnNode::make_real_left(INodeFactory &factory, xmlNodePtr inner)
