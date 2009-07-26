@@ -150,13 +150,14 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 		     ++l) {
 		    Forrest gipjp = l->second;
 		    Answer a;
-		    if (kp == 1) {
-		        a = fanPad.get(gipjp.get_kernel());
-			// s.set(fe.get(kp - 1), gipjp, a);
-		    } else {
-		        Forrest fprev(fe.get(kp - 1));
-			if (!fprev.is_empty()) {
-			    a = s.get(fprev.get_kernel(), gipjp.get_kernel());
+		    Forrest fprev = fe.get(kp - 1);
+		    if (!fprev.is_empty()) {
+		        TKernel gk = gipjp.get_kernel();
+			if (kp == 1) {
+			    a = fanPad.get(gk);
+			    s.set(fprev.get_kernel(), gk, a);
+			} else {
+			    a = s.get(fprev.get_kernel(), gk);
 			}
 		    }
 
