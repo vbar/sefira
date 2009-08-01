@@ -16,21 +16,21 @@ they can be tried out in practical applications.
 Scripting languages being impractical for fast implementations of
 memory-intensive algorithms, sefira is a C++ (C would probably be
 feasible, but the implementations depend heavily on C++ containers)
-library with common classes plus executables, one per implemented
-algorithm, wrapping the classes into command-line programs. The common
-model of all algorithm implementations is the transformation of two
-XML trees (sefira depends on libxml2) to their largest common subtree
-(also XML).
+library with common classes plus executables - one per implemented
+algorithm - wrapping the classes into command-line programs. The
+common model of all algorithm implementations is the transformation of
+two XML trees (sefira depends on libxml2) to their largest common
+subtree (also XML).
 
 When only the distance is required, it can be trivially computed from
 tree sizes, although keeping the intermediate subtrees wastes quite a
 lot of memory in that case - using a simplified algorithm may be worth
-a rewrite. Implementations often use unsigned short indices, limiting
-the size of one input tree somewhere around 65536 DOM nodes (on 32bit
-systems; sefira has never been tried on anything else, although
-obviously you're welcome to try it out on as big an iron as you want)
-- beyond that, the algorithms would probably be hopelessly slow
-anyway...
+a rewrite. Implementations generally use unsigned short indices,
+limiting the size of one input tree somewhere around 65536 DOM nodes
+(on 32bit systems; sefira has never been tried on anything else,
+although obviously you're welcome to try it out on as big an iron as
+you want) - beyond that, the algorithms would probably be hopelessly
+slow anyway...
 
 Error handling is implemented using C++ exceptions, throwing instances
 of the standard C++ exception classes. Checking of parameters is far
@@ -59,20 +59,30 @@ from the first and second tree having the same label - in other words,
 it's maximally efficient for totally different trees and looses its
 edge as node names start to repeat.
 
-sefira-systematic
+sefira-straight
 
 This algorithm is from
 
 Erik D. Demaine, Shay Mozes, Benjamin Rossman, and Oren Weimann,
 An Optimal Decomposition Algorithm for Tree Edit Distance
 in Proceedings of the 34th International Colloquium on Automata,
-Languages and Programming (ICALP 2007), Wroclaw, Poland, July 9, 2007,
-except that version probably doesn't have the memory-efficient
-variant, as described in
-http://erikdemaine.org/papers/TreeEdit_ICALP2007/paper.pdf .
+Languages and Programming (ICALP 2007), Wroclaw, Poland, July 9, 2007.
 
 This algorithm is formulated for a generic distance metric, but sefira
 implements only the size comparison - a generalization is left as an
-exercise for the reader. The implementation is memory-efficient (which
-might make it somewhat slower than a memoizing version), using n^2
-space and n^3 time (where n is the size of the larger input tree).
+exercise for the reader. sefira-straight is the memoizing version,
+using n^3 in both space and time (where n is the size of the larger
+input tree).
+
+sefira-systematic
+
+This algorithm is the same as sefira-straight, i.e. also from
+
+Erik D. Demaine, Shay Mozes, Benjamin Rossman, and Oren Weimann,
+An Optimal Decomposition Algorithm for Tree Edit Distance
+in Proceedings of the 34th International Colloquium on Automata,
+Languages and Programming (ICALP 2007), Wroclaw, Poland, July 9, 2007,
+except it's the memory-efficient variant, as described in
+http://erikdemaine.org/papers/TreeEdit_ICALP2007/paper.pdf .
+
+It uses n^2 space and n^3 time.

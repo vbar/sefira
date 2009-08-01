@@ -2,11 +2,15 @@
 
 INCLUDES=-I@LIBXML2_INCL_DIR@ -I../lib
 
-bin_PROGRAMS = sefira-optimistic sefira-systematic
+bin_PROGRAMS = sefira-optimistic sefira-straight sefira-systematic
 
 sefira_optimistic_SOURCES = optimistic.cc optprog.cc optprog.hh
 
 sefira_optimistic_LDADD = ../lib/libsefira.la -lxml2 -lstdc++
+
+sefira_straight_SOURCES = straight.cc strprog.cc strprog.hh
+
+sefira_straight_LDADD = ../lib/libsefira.la -lxml2 -lstdc++
 
 sefira_systematic_SOURCES = systematic.cc sysprog.cc sysprog.hh
 

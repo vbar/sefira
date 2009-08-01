@@ -40,9 +40,11 @@ AC_CONFIG_FILES([Makefile
  	bin/Makefile
  	lib/Makefile
  	lib/optimistic/Makefile
+ 	lib/straight/Makefile
  	lib/systematic/Makefile
 	sefira.test/Makefile
 	testdata/Makefile
 	testdata/optimistic/Makefile
+	testdata/straight/Makefile
 	testdata/systematic/Makefile])
 AC_OUTPUT

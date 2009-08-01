@@ -1,0 +1,31 @@
+if [ catch {
+    set i 0
+    while { $i <= 40 } {
+	if { $i < 10 } {
+	    set filled 0$i
+	} else {
+	    set filled $i
+	}
+
+	set root testdata/$filled
+	set a $root
+	append a a.xml
+	set b $root
+	append b b.xml
+	set d testdata/straight/$filled
+	append d d.xml
+	set res $filled
+	append res res.xml
+
+	exec bin/sefira-straight $a $b > $res
+	exec diff $res $d
+	exec rm $res
+	pass $filled
+
+	incr i
+    }
+
+    pass "test" } err ] {
+    puts stderr "ERROR: $err"
+    fail "test"
+}

@@ -1,16 +1,16 @@
-#ifndef sysprog_hh
-#define sysprog_hh
+#ifndef strprog_hh
+#define strprog_hh
 
 #include "program.hh"
 
 class Answer;
 
-class SysProg : public Program
+class StrProg : public Program
 {
 public:
     int run(int argc, char **argv)
     {
-        return Program::run("systematic", argc, argv);
+        return Program::run("straight", argc, argv);
     }
 
 private:
