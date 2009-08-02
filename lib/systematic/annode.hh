@@ -5,10 +5,11 @@
 #include "inode.hh"
 #include "nodeindex.hh"
 
+class TreeTable;
+
 namespace systematic {
 
 class INodeFactory;
-class TreeTable;
 
 // Metadata ("annotations") common to all binary nodes.
 class AnNode : public INode

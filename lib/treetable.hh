@@ -1,11 +1,9 @@
-#ifndef systematic_treetable_hh
-#define systematic_treetable_hh
+#ifndef treetable_hh
+#define treetable_hh
 
 #include <vector>
 #include <libxml/tree.h>
 #include "nodeindex.hh"
-
-namespace systematic {
 
 // inverse mapping from TNodeIndex to xmlNodePtr
 class TreeTable
@@ -26,7 +24,5 @@ public:
         table.push_back(inner);
     }
 };
-
-}
 
 #endif

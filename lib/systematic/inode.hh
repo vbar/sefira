@@ -5,9 +5,9 @@
 #include <libxml/tree.h>
 #include "nodeindex.hh"
 
-namespace systematic {
-
 class TreeTable;
+
+namespace systematic {
 
 // an interface of the binary node (either backed by a real XML node,
 // or an extra one inserted to make the tree binary)
