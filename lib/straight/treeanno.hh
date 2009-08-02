@@ -27,10 +27,14 @@ public:
 
     TNodeIndex get_desc_count(xmlNodePtr node) const;
 
+    TNodeIndex get_preorder(xmlNodePtr node) const;
+
     virtual bool is_light(xmlNodePtr node) const;
 
 private:
-    NodeAnno *fill(xmlNodePtr node);
+    NodeAnno *fill(xmlNodePtr node, TNodeIndex &preorder);
+
+    TAnno::const_iterator get(xmlNodePtr node) const;
 };
 
 }

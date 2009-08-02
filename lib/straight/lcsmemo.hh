@@ -11,15 +11,14 @@ namespace straight {
 class LcsMemo
 {
 private:
-    typedef std::map<std::pair<Forrest, Forrest>, Answer> TMap;
+    typedef std::map<std::pair<TKernel, TKernel>, Answer> TMap;
 
     TMap memo;
 
-
 public:
-    const Answer *get(const Forrest &f, const Forrest &g) const;
+    const Answer *get(TKernel f, TKernel g) const;
 
-    void insert(const Forrest &f, const Forrest &g, Answer a);
+    void insert(TKernel f, TKernel g, Answer a);
 };
 
 }

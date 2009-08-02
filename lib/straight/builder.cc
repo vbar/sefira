@@ -5,6 +5,7 @@
 #include "treeiter.hh"
 #include <iomanip>
 #include <iostream>
+#include <stdexcept>
 
 #define NOTRACE
 #include "trace.hh"
@@ -30,6 +31,16 @@ static Forrest make_child_forrest(xmlNodePtr tree, const TreeAnno &anno)
     return f;
 }
 
+static TKernel make_kernel(const Forrest &forrest, const TreeAnno &anno)
+{
+    if (forrest.is_empty()) {
+        throw std::invalid_argument("empty forrest needs no kernel");
+    }
+
+    return TKernel(anno.get_preorder(forrest.get_front()),
+        anno.get_preorder(forrest.get_back()));
+}
+
 Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
     anno1(tree1), anno2(tree2)
 {
@@ -47,15 +58,17 @@ Answer Builder::get_lcs(const Forrest &f, const Forrest &g, bool swap)
     if (f.is_empty() || g.is_empty()) {
         return Answer();
     }
-
-    const Answer *a = lcsMemo.get(f, g);
+    
+    TKernel k = make_kernel(f, anno1);
+    TKernel l = make_kernel(g, anno2);
+    const Answer *a = lcsMemo.get(k, l);
     if (a) {
         return *a;
     } else {
         Answer b = (f.is_tree() && g.is_tree()) ? 
 	    do_get_lcs(f.get_front(), g.get_front()) :
 	    compute_lcs(f, g, swap);
-	lcsMemo.insert(f, g, b);
+	lcsMemo.insert(k, l, b);
 	return b;
     }
 }

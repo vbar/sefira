@@ -9,17 +9,25 @@ class NodeAnno
 {
 private:
     const TNodeIndex descCount;
+    const TNodeIndex preorder;
     bool light;
 
 public:
-    NodeAnno(TNodeIndex desc_count):
-        descCount(desc_count), light(true)
+    NodeAnno(TNodeIndex desc_count, TNodeIndex preorder):
+        descCount(desc_count),
+	preorder(preorder),
+	light(true)
     {
     }
 
     TNodeIndex get_desc_count() const
     {
         return descCount;
+    }
+
+    TNodeIndex get_preorder() const
+    {
+        return preorder;
     }
 
     bool is_light() const
