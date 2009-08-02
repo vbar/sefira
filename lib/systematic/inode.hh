@@ -36,7 +36,7 @@ public:
 
     virtual void dump(std::ostream &os, int level) const = 0;
 
-    virtual TNodeIndex fill(TNodeIndex before, TreeTable &tt) = 0;
+    virtual void fill(TreeTable &tt) = 0;
 };
 
 std::ostream &operator<<(std::ostream &os, const INode &node);

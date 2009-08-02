@@ -27,7 +27,7 @@ public:
 
     virtual TNodeIndex get_inorder();
 
-    virtual TNodeIndex fill(TNodeIndex before, TreeTable &tt);
+    virtual void fill(TreeTable &tt);
 
 protected:
     INode *make_real_left(INodeFactory &factory, xmlNodePtr inner);

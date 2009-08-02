@@ -28,15 +28,18 @@ TNodeIndex AnNode::get_inorder()
     return inorder;
 }
 
-TNodeIndex AnNode::fill(TNodeIndex before, TreeTable &tt)
+void AnNode::fill(TreeTable &tt)
 {
     if (inorder > 0) {
         throw std::logic_error("fill called twice");
     }
 
+    TNodeIndex before = tt.next();
+
     INode *left = get_left();
     if (left) {
-        inorder = left->fill(before, tt);
+        left->fill(tt);
+	inorder = tt.next();
 	assert(inorder > before);
 	size += (inorder - before);
     } else {
@@ -46,15 +49,11 @@ TNodeIndex AnNode::fill(TNodeIndex before, TreeTable &tt)
     tt.insert(get_inner());
 
     INode *right = get_right();
-    TNodeIndex after;
     if (right) {
-        after = right->fill(inorder + 1, tt);
+        right->fill(tt);
+	TNodeIndex after = tt.next();
 	size += (after - inorder - 1);
-    } else {
-        after = inorder + 1;
     }
-
-    return after;
 }
 
 INode *AnNode::make_real_left(INodeFactory &factory, xmlNodePtr inner)

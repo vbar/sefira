@@ -14,10 +14,12 @@ private:
     TTable table;
 
 public:
-    xmlNodePtr get(TNodeIndex idx)
+    xmlNodePtr get(TNodeIndex idx) const
     {
         return table.at(idx);
     }
+
+    TNodeIndex next() const;
 
     void insert(xmlNodePtr inner)
     {
