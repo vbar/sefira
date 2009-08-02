@@ -6,6 +6,7 @@
 #include "lcsmemo.hh"
 
 class Answer;
+class RelResult;
 
 namespace straight {
 
@@ -28,11 +29,11 @@ public:
     Answer get_lcs();
 
 private:    
-    Answer get_lcs(const Forrest &f, const Forrest &g, bool swap);
+    RelResult get_lcs(const Forrest &f, const Forrest &g, bool swap);
 
-    Answer do_get_lcs(xmlNodePtr node1, xmlNodePtr node2);
+    RelResult do_get_lcs(xmlNodePtr node1, xmlNodePtr node2);
 
-    Answer compute_lcs(const Forrest &f, const Forrest &g, bool swap);
+    RelResult compute_lcs(const Forrest &f, const Forrest &g, bool swap);
 
     Direction get_direction(const Forrest &f, const Forrest &g, bool swap);
 };

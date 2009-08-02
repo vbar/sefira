@@ -7,8 +7,6 @@ namespace straight {
 TreeAnno::TreeAnno(xmlNodePtr doc_elem):
     docElem(doc_elem)
 {
-    TNodeIndex preorder = 0;
-    fill(doc_elem, preorder);
 }
 
 TNodeIndex TreeAnno::get_desc_count(xmlNodePtr node) const
@@ -29,15 +27,16 @@ bool TreeAnno::is_light(xmlNodePtr node) const
     return i->second.is_light();
 }
 
-NodeAnno *TreeAnno::fill(xmlNodePtr node, TNodeIndex &preorder)
+NodeAnno *TreeAnno::fill(xmlNodePtr node, TreeTable &tt)
 {
-    TNodeIndex node_preorder = preorder++;
+    TNodeIndex node_preorder = tt.next();
+    tt.insert(node);
 
     TNodeIndex sum = 0;
     NodeAnno *max = 0;
     xmlNodePtr ch = node->children;
     while (ch) {
-        NodeAnno *p = fill(ch, preorder);
+        NodeAnno *p = fill(ch, tt);
 	TNodeIndex w = p->get_desc_count();
 	sum += w + 1;
 	if (!max || (w > max->get_desc_count())) {

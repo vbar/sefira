@@ -6,6 +6,7 @@
 #include "nodeindex.hh"
 #include "itreeanno.hh"
 #include "nodeanno.hh"
+#include "treetable.hh"
 
 namespace straight {
 
@@ -15,7 +16,7 @@ private:
     typedef std::map<xmlNodePtr, NodeAnno> TAnno;
 
     xmlNodePtr docElem;
-
+    TreeTable treeTable;
     TAnno anno;
 
 public:
@@ -25,14 +26,24 @@ public:
 
     xmlNodePtr get_tree() const { return docElem; }
 
+    xmlNodePtr get_at(TNodeIndex idx) const
+    {
+        return treeTable.get(idx);
+    }
+
     TNodeIndex get_desc_count(xmlNodePtr node) const;
 
     TNodeIndex get_preorder(xmlNodePtr node) const;
 
     virtual bool is_light(xmlNodePtr node) const;
 
+    void fill()
+    {
+        fill(docElem, treeTable);
+    }
+
 private:
-    NodeAnno *fill(xmlNodePtr node, TNodeIndex &preorder);
+    NodeAnno *fill(xmlNodePtr node, TreeTable &tt);
 
     TAnno::const_iterator get(xmlNodePtr node) const;
 };

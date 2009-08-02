@@ -3,7 +3,7 @@
 
 #include <map>
 #include <utility>
-#include "answer.hh"
+#include "relresult.hh"
 #include "forrest.hh"
 
 namespace straight {
@@ -11,14 +11,14 @@ namespace straight {
 class LcsMemo
 {
 private:
-    typedef std::map<std::pair<TKernel, TKernel>, Answer> TMap;
+    typedef std::map<std::pair<TKernel, TKernel>, RelResult> TMap;
 
     TMap memo;
 
 public:
-    const Answer *get(TKernel f, TKernel g) const;
+    const RelResult *get(TKernel f, TKernel g) const;
 
-    void insert(TKernel f, TKernel g, Answer a);
+    void insert(TKernel f, TKernel g, RelResult a);
 };
 
 }

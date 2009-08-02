@@ -2,6 +2,7 @@
 #include "answer.hh"
 #include "compare.hh"
 #include "forrest.hh"
+#include "relresult.hh"
 #include "treeiter.hh"
 #include <iomanip>
 #include <iostream>
@@ -44,28 +45,41 @@ static TKernel make_kernel(const Forrest &forrest, const TreeAnno &anno)
 Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
     anno1(tree1), anno2(tree2)
 {
+    anno1.fill();
+    anno2.fill();
     TRACE1("Builder ctor(" << tree1 << ", " << tree2 << ')');
 }
 
 Answer Builder::get_lcs()
 {
-    return do_get_lcs(anno1.get_tree(), anno2.get_tree());
+    RelResult r = do_get_lcs(anno1.get_tree(), anno2.get_tree());
+
+    Answer a;
+    for (RelResult::TSet::const_iterator i = r.begin();
+	 i != r.end();
+	 ++i)
+    {
+	xmlNodePtr n = anno1.get_at(*i);
+	a.insert(n);
+    }
+
+    return a;
 }
 
-Answer Builder::get_lcs(const Forrest &f, const Forrest &g, bool swap)
+RelResult Builder::get_lcs(const Forrest &f, const Forrest &g, bool swap)
 {
     TRACE1("enter get_lcs(" << f << ", " << g << ')');
     if (f.is_empty() || g.is_empty()) {
-        return Answer();
+        return RelResult();
     }
     
     TKernel k = make_kernel(f, anno1);
     TKernel l = make_kernel(g, anno2);
-    const Answer *a = lcsMemo.get(k, l);
+    const RelResult *a = lcsMemo.get(k, l);
     if (a) {
         return *a;
     } else {
-        Answer b = (f.is_tree() && g.is_tree()) ? 
+        RelResult b = (f.is_tree() && g.is_tree()) ? 
 	    do_get_lcs(f.get_front(), g.get_front()) :
 	    compute_lcs(f, g, swap);
 	lcsMemo.insert(k, l, b);
@@ -73,7 +87,7 @@ Answer Builder::get_lcs(const Forrest &f, const Forrest &g, bool swap)
     }
 }
 
-Answer Builder::do_get_lcs(xmlNodePtr node1, xmlNodePtr node2)
+RelResult Builder::do_get_lcs(xmlNodePtr node1, xmlNodePtr node2)
 {
     TRACE1("enter do_get_lcs(" << node1 << ", " << node2 << ')');
     Forrest f(make_root_forrest(node1));
@@ -93,7 +107,7 @@ Answer Builder::do_get_lcs(xmlNodePtr node1, xmlNodePtr node2)
     return compute_lcs(f, g, swap);
 }
 
-Answer Builder::compute_lcs(const Forrest &f, const Forrest &g, bool swap)
+RelResult Builder::compute_lcs(const Forrest &f, const Forrest &g, bool swap)
 {
     xmlNodePtr rf, rg;
     Forrest fnl(f);
@@ -108,9 +122,9 @@ Answer Builder::compute_lcs(const Forrest &f, const Forrest &g, bool swap)
     }
 
     TRACE1("1: " << fnl << ", " << g);
-    Answer a1 = get_lcs(fnl, g, swap);
+    RelResult a1 = get_lcs(fnl, g, swap);
     TRACE1("2: " << f << ", " << gnl);
-    Answer a2 = get_lcs(f, gnl, swap);
+    RelResult a2 = get_lcs(f, gnl, swap);
 
     if (!compare(rf, rg, false)) {
         Forrest ftl(f);
@@ -126,12 +140,12 @@ Answer Builder::compute_lcs(const Forrest &f, const Forrest &g, bool swap)
 	Forrest chf(make_child_forrest(rf, anno1));
 	Forrest chg(make_child_forrest(rg, anno2));
 	TRACE1("3: " << chf << ", " << chg);
-	Answer a = get_lcs(chf, chg, swap);
+	RelResult a = get_lcs(chf, chg, swap);
 
 	TRACE1("4: " << ftl << ", " << gtl);
-	Answer rest = get_lcs(ftl, gtl, swap);
+	RelResult rest = get_lcs(ftl, gtl, swap);
 	a.insert(rest);
-	a.insert(rf);
+	a.insert(anno1.get_preorder(rf));
 
 	if (a.get_score() >= a1.get_score()) {
 	    a1 = a;
