@@ -19,6 +19,10 @@ private:
 
     unsigned short max;
 
+    // NULL when this instance is empty, otherwise array of
+    // storage_byte_size bitfields
+    TWord *mask;
+
     TLowItem *storage;
 
 public:
@@ -28,11 +32,12 @@ public:
         ByteAllocator;
 
     ShortMap(const ByteAllocator &a = ByteAllocator()):
-        ByteAllocator(a)
+        ByteAllocator(a),
+	min(0xffff),
+	max(0),
+	mask(0),
+	storage(0)
     {
-	min = 0xffff;
-	max = 0;
-	storage = 0;
     }
 
     ~ShortMap()
@@ -94,9 +99,13 @@ public:
   	    return 0;
 	}
 
-	assert(storage);
+	unsigned char high = key / 256;
+	if (!has_bit(mask, high))
+	{
+	    return 0;
+	}
 
-        return storage[key / 256].get_value(key % 256);
+        return storage[high].get_value(key % 256);
     }
 
     unsigned int successor(unsigned short key) const
@@ -106,8 +115,6 @@ public:
 	    return none;
 	}
 
-	assert(storage);
-
 	if (min == max)
 	{
 	    return (key < min) ? min : none;
@@ -116,18 +123,25 @@ public:
 	unsigned char high = key / 256;
 	unsigned char low = key % 256;
 
-	unsigned short low_succ = storage[high].successor(low);
-	if (low_succ != TLowItem::none)
+	unsigned short low_succ;
+	if (has_bit(mask, high))
 	{
-	    return 256 * high + low_succ;
+	    low_succ = storage[high].successor(low);
+	    if (low_succ != TLowItem::none)
+	    {
+		return 256 * high + low_succ;
+	    }
 	}
 
 	for (TIndex i = high + 1; i < 256; ++i)
 	{
-	    low_succ = storage[i].get_min();
-	    if (low_succ != TLowItem::none)
+	    if (has_bit(mask, i))
 	    {
-		return 256 * i + low_succ;
+		low_succ = storage[i].get_min();
+		if (low_succ != TLowItem::none)
+		{
+		    return 256 * i + low_succ;
+		}
 	    }
 	}
 
@@ -140,8 +154,6 @@ public:
 	{
 	    return none;
 	}
-
-	assert(storage);
 
 	if (min == max)
 	{
@@ -160,18 +172,25 @@ public:
 	unsigned char high = key / 256;
 	unsigned char low = key % 256;
 
-	unsigned short low_succ = storage[high].successor(low, vp);
-	if (low_succ != TLowItem::none)
+	unsigned short low_succ;
+	if (has_bit(mask, high))
 	{
-	    return 256 * high + low_succ;
+	    low_succ = storage[high].successor(low, vp);
+	    if (low_succ != TLowItem::none)
+	    {
+		return 256 * high + low_succ;
+	    }
 	}
 
 	for (TIndex i = high + 1; i < 256; ++i)
 	{
-	    low_succ = storage[i].get_min(vp);
-	    if (low_succ != TLowItem::none)
+	    if (has_bit(mask, i))
 	    {
-		return 256 * i + low_succ;
+		low_succ = storage[i].get_min(vp);
+		if (low_succ != TLowItem::none)
+		{
+		    return 256 * i + low_succ;
+		}
 	    }
 	}
 
@@ -195,18 +214,25 @@ public:
 	unsigned char high = key / 256;
 	unsigned char low = key % 256;
 
-	unsigned short low_pred = storage[high].predecessor(low);
-	if (low_pred != TLowItem::none)
+	unsigned short low_pred;
+	if (has_bit(mask, high))
 	{
-	    return 256 * high + low_pred;
+	    low_pred = storage[high].predecessor(low);
+	    if (low_pred != TLowItem::none)
+	    {
+		return 256 * high + low_pred;
+	    }
 	}
 
 	for (TIndex i = high; i > 0; --i)
 	{
-	    low_pred = storage[i - 1].get_max();
-	    if (low_pred != TLowItem::none)
+	    if (has_bit(mask, i - 1))
 	    {
-		return 256 * (i - 1) + low_pred;
+		low_pred = storage[i - 1].get_max();
+		if (low_pred != TLowItem::none)
+		{
+		    return 256 * (i - 1) + low_pred;
+		}
 	    }
 	}
 
@@ -239,18 +265,25 @@ public:
 	unsigned char high = key / 256;
 	unsigned char low = key % 256;
 
-	unsigned short low_pred = storage[high].predecessor(low, vp);
-	if (low_pred != TLowItem::none)
+	unsigned short low_pred;
+	if (has_bit(mask, high))
 	{
-	    return 256 * high + low_pred;
+	    low_pred = storage[high].predecessor(low, vp);
+	    if (low_pred != TLowItem::none)
+	    {
+		return 256 * high + low_pred;
+	    }
 	}
 
 	for (TIndex i = high; i > 0; --i)
 	{
-	    low_pred = storage[i - 1].get_max(vp);
-	    if (low_pred != TLowItem::none)
+	    if (has_bit(mask, i - 1))
 	    {
-		return 256 * (i - 1) + low_pred;
+		low_pred = storage[i - 1].get_max(vp);
+		if (low_pred != TLowItem::none)
+		{
+		    return 256 * (i - 1) + low_pred;
+		}
 	    }
 	}
 
@@ -276,8 +309,14 @@ public:
 	    }
 	}
 
-	assert(storage);
-        storage[key / 256].insert(key % 256, value);
+	unsigned char high = key / 256;
+	if (!has_bit(mask, high))
+	{
+	    new (storage + high) TLowItem(*this);
+	    mask[high / word_bit_size] |= (1u << (high % word_bit_size));
+	}
+
+        storage[high].insert(high, value);
     }
 
     void set(unsigned short key, TValue value)
@@ -299,8 +338,14 @@ public:
 	    }
 	}
 
-	assert(storage);
-        storage[key / 256].set(key % 256, value);
+	unsigned char high = key / 256;
+	if (!has_bit(mask, high))
+	{
+	    new (storage + high) TLowItem(*this);
+	    mask[high / word_bit_size] |= (1u << (high % word_bit_size));
+	}
+
+        storage[high].set(key % 256, value);
     }
 
     void erase(unsigned short key)
@@ -341,26 +386,30 @@ public:
 private:
     void create_storage()
     {
-	assert(!storage);
+	mask = reinterpret_cast<TWord *>(this->allocate(word_bit_size));
+	memset(mask, 0, word_bit_size);
+      
 	storage = reinterpret_cast<TLowItem *>(
 		this->allocate(256 * sizeof(TLowItem)));
-	for (TIndex i = 0; i < 256; ++i)
-	{
-	    new (storage + i) TLowItem(*this);
-	}
     }
 
     void destroy_storage()
     {
 	for (TIndex i = 0; i < 256; ++i)
 	{
-	    storage[i].~TLowItem();
+	    if (has_bit(mask, i))
+	    {
+	        storage[i].~TLowItem();
+	    }
 	}
 
 	this->deallocate(reinterpret_cast<unsigned char *>(storage),
 			 256 * sizeof(TLowItem));
-
 	storage = 0;
+
+	this->deallocate(reinterpret_cast<unsigned char *>(mask),
+			 word_bit_size);
+	mask = 0;
     }
 };
 
