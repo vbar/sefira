@@ -4,7 +4,6 @@ import getopt
 from math import sqrt
 import random
 import sys
-from warnings import warn
 import xml.dom
 from xml.dom.ext import Print
 
