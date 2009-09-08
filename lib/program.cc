@@ -129,12 +129,12 @@ static xmlNodePtr remove_single_node(xmlNodePtr n)
 
     if (n->prev)
     {
-        n->prev->next = n->children;
+        n->prev->next = n->children ? n->children : n->next;
     }
 
     if (n->next)
     {
-        n->next->prev = n->last;
+        n->next->prev = n->last ? n->last : n->prev;
     }
 
     if (n == n->parent->children)
@@ -164,7 +164,7 @@ static xmlNodePtr do_prune(xmlNodePtr tree, const Answer &answer)
     xmlNodePtr next;
     if (!answer.has_node(tree))
     {
-       next = remove_single_node(tree);
+        next = remove_single_node(tree);
     }
     else
     {
