@@ -4,6 +4,8 @@ INCLUDES=-I@LIBXML2_INCL_DIR@ -I../lib
 
 bin_PROGRAMS = sefira-optimistic sefira-straight sefira-systematic
 
+noinst_PROGRAMS = sizetree
+
 sefira_optimistic_SOURCES = optimistic.cc
 
 sefira_optimistic_LDADD = ../lib/libsefira.la -lxml2 -lstdc++
@@ -15,3 +17,7 @@ sefira_straight_LDADD = ../lib/libsefira.la -lxml2 -lstdc++
 sefira_systematic_SOURCES = systematic.cc
 
 sefira_systematic_LDADD = ../lib/libsefira.la -lxml2 -lstdc++
+
+sizetree_SOURCES = sizetree.cc
+
+sizetree_LDADD = ../lib/libsefira.la -lxml2 -lstdc++
