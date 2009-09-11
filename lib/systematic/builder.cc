@@ -155,7 +155,7 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
     Forrest fvp = fe.get(k);
     Forrest f0vp = fe.get(k - 1);
  
-    SmallEnum ge(swap ? f : g, twist);
+    SmallEnum ge = smallEnumCache.get_enum(swap ? f : g, swap, twist);
     TNodeIndex i = ge.get_max_leaf();
 
     for (TNodeIndex ip = 1; ip <= i; ++ip) {

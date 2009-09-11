@@ -19,6 +19,7 @@ private:
 public:
     SmallEnumCache();
 
+    // root must stay valid for the lifetime of the cache object
     SmallEnum get_enum(INode *root, bool swap, bool twist);
 };
 

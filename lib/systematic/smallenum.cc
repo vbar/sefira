@@ -13,6 +13,11 @@ static SmallEnumBase *make_letter(bool twist)
     }
 }
 
+SmallEnum::SmallEnum():
+    Envelope<SmallEnumBase>(0)
+{
+}
+
 SmallEnum::SmallEnum(INode *root, bool twist):
     Envelope<SmallEnumBase>(make_letter(twist))
 {

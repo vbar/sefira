@@ -10,6 +10,7 @@ namespace systematic {
 class SmallEnum : private Envelope<SmallEnumBase>
 {
 public:
+    SmallEnum();
     SmallEnum(INode *root, bool twist);
 
     TNodeIndex get_max_leaf() const

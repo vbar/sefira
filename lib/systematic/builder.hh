@@ -4,6 +4,7 @@
 #include <libxml/tree.h>
 #include "fanpad.hh"
 #include "rootnode.hh"
+#include "smallenumcache.hh"
 #include "stemtable.hh"
 
 class Answer;
@@ -19,6 +20,9 @@ private:
     RootNode root2;
     StemTable stemTable;
     FanPad fanPad;
+
+    // has shorter lifetime than both RootNode instances
+    SmallEnumCache smallEnumCache;
 
 public:
     // trees passed to the constructor must stay valid for the
