@@ -10,7 +10,9 @@ namespace systematic {
 class SmallEnum : private Envelope<SmallEnumBase>
 {
 public:
+    // constructs an invalid cache entry
     SmallEnum();
+
     SmallEnum(INode *root, bool twist);
 
     TNodeIndex get_max_leaf() const
