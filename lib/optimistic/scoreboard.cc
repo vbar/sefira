@@ -15,7 +15,7 @@ RelResult ScoreBoard::get(const GraphEdge &e) const
     return iter->second;
 }
 
-void ScoreBoard::insert(const GraphEdge &e, RelResult r)
+void ScoreBoard::insert(const GraphEdge &e, const RelResult &r)
 {
     scoreMap.insert(TMap::value_type(e, r));
 }

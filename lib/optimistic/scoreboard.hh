@@ -20,7 +20,7 @@ public:
 
     RelResult get(const GraphEdge &e) const;
 
-    void insert(const GraphEdge &e, RelResult r);
+    void insert(const GraphEdge &e, const RelResult &r);
 };
 
 std::ostream &operator<<(std::ostream &os, const ScoreBoard &b);
