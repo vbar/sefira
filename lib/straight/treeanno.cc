@@ -27,16 +27,16 @@ bool TreeAnno::is_light(xmlNodePtr node) const
     return i->second.is_light();
 }
 
-NodeAnno *TreeAnno::fill(xmlNodePtr node, TreeTable &tt)
+NodeAnno *TreeAnno::fill(xmlNodePtr node)
 {
-    TNodeIndex node_preorder = tt.next();
-    tt.insert(node);
+    TNodeIndex node_preorder = treeTable.next();
+    treeTable.insert(node);
 
     TNodeIndex sum = 0;
     NodeAnno *max = 0;
     xmlNodePtr ch = node->children;
     while (ch) {
-        NodeAnno *p = fill(ch, tt);
+        NodeAnno *p = fill(ch);
 	TNodeIndex w = p->get_desc_count();
 	sum += w + 1;
 	if (!max || (w > max->get_desc_count())) {

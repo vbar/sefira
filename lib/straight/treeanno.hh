@@ -39,11 +39,11 @@ public:
 
     void fill()
     {
-        fill(docElem, treeTable);
+        fill(docElem);
     }
 
 private:
-    NodeAnno *fill(xmlNodePtr node, TreeTable &tt);
+    NodeAnno *fill(xmlNodePtr node);
 
     TAnno::const_iterator get(xmlNodePtr node) const;
 };
