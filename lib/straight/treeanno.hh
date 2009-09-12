@@ -1,5 +1,5 @@
-#ifndef treeanno_hh
-#define treeanno_hh
+#ifndef straight_treeanno_hh
+#define straight_treeanno_hh
 
 #include <map>
 #include <libxml/tree.h>
