@@ -9,24 +9,48 @@ from xml.dom.ext import Print
 
 
 def usage():
-    print "usage:", sys.argv[0], "-n tree-size -s max-label-count"
+    print "usage:", sys.argv[0], "-n tree-size [ -s max-label-count ]"
 
 
-def make_tag_char(s):
+def make_uniform_tag_char(s):
     return chr(ord('a') + random.randint(0, s - 1))
 
 
-def make_tag_name(s):
+def make_uniform_tag(s):
     cs = []
     while s >= 26:        
-        cs.append(make_tag_char(26))
+        cs.append(make_uniform_tag_char(26))
         s = s // 26
-    cs.append(make_tag_char(s))
+    cs.append(make_uniform_tag_char(s))
+    return ''.join(cs)
+
+
+def make_low_tag_char(n):
+    return chr(ord('a') + n - 1)
+
+
+def make_low_tag(f):
+    t = random.random()
+    c = f
+    n = 1
+    while (t < c) and (n <= 1000):
+        c = c * f;
+        n = n + 1;
+
+    cs = []
+    while n >= 26:        
+        cs.append(make_low_tag_char(26))
+        n = n // 26
+    cs.append(make_low_tag_char(n))
     return ''.join(cs)
 
 
 def create_element(doc, s):
-    return doc.createElement(make_tag_name(s))
+    if s is None:
+        t = make_low_tag(0.9)
+    else:
+        t = make_uniform_tag(s)
+    return doc.createElement(t)
 
 
 def fill_children(doc, root, n, s):
@@ -89,7 +113,7 @@ def main():
         else:
             assert False, "unhandled option"
 
-    if (n is None) or (s is None) or (n <= 0) or (s <= 0):
+    if (n is None) or (n <= 0) or (not(s is None) and (s <= 0)):
         usage()
         sys.exit(2)
 
