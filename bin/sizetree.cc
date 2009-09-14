@@ -15,28 +15,45 @@
 // ignorable whitespace, much less the same behavior as libxml2...
 
 TNodeIndex node_count = 0;
+TNodeIndex leaf_count = 0;
 
 std::set<xmlNodePtr, less_xmlNodePtr> node_labels;
 
-void do_size_tree(xmlNodePtr node)
+TNodeIndex do_size_tree(xmlNodePtr node, TNodeIndex depth)
 {
+    TNodeIndex max_depth = ++depth;
+
     ++node_count;
     node_labels.insert(node);
 
     xmlNodePtr ch = node->children;
+    if (!ch)
+    {
+	++leaf_count;
+    }
+
     while (ch)
     {
-	do_size_tree(ch);
+        TNodeIndex d = do_size_tree(ch, depth);
+	if (d > max_depth)
+	{
+	    max_depth = d;
+	}
+
 	ch = ch->next;
     }
+
+    return max_depth;
 }
 
 void size_tree(const char *fname)
 {
     XDoc doc = xutil::parse_file(fname);
-    do_size_tree(xutil::get_root_element(doc));
+    TNodeIndex max_depth = do_size_tree(xutil::get_root_element(doc), 0);
     std::cout << "tree size = " << node_count << std::endl;
     std::cout << "label count = " << node_labels.size() << std::endl;
+    std::cout << "max depth = " << max_depth << std::endl;
+    std::cout << "leaf count = " << leaf_count << std::endl;
 }
 
 int main(int argc, char **argv)
