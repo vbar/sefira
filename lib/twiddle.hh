@@ -1,7 +1,5 @@
-#ifndef optimistic_twiddle_hh
-#define optimistic_twiddle_hh
-
-namespace optimistic {
+#ifndef twiddle_hh
+#define twiddle_hh
 
 typedef unsigned int TWord;
 
@@ -23,8 +21,6 @@ unsigned short get_highest(TWord word,
 inline bool has_bit(TWord *bits, unsigned char x)
 {
     return bits[x / word_bit_size] & (1u << (x % word_bit_size));
-}
-
 }
 
 #endif

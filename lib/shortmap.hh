@@ -1,12 +1,10 @@
-#ifndef optimistic_shortmap_hh
-#define optimistic_shortmap_hh
+#ifndef shortmap_hh
+#define shortmap_hh
 
 #include <assert.h>
 #include <memory> // for allocator
 #include "bytemap.hh"
 #include "twiddle.hh"
-
-namespace optimistic {
 
 template<typename TValue,
 	 typename TAllocator = std::allocator<unsigned char> >
@@ -412,7 +410,5 @@ private:
 	mask = 0;
     }
 };
-
-}
 
 #endif

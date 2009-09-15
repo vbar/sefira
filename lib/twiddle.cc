@@ -1,6 +1,6 @@
 #include "twiddle.hh"
 
-unsigned short optimistic::get_lowest(TWord word,
+unsigned short get_lowest(TWord word,
     TIndex start_bit)
 {
     if (!word)
@@ -22,7 +22,7 @@ unsigned short optimistic::get_lowest(TWord word,
     return nobyte;
 }
 
-unsigned short optimistic::get_highest(TWord word,
+unsigned short get_highest(TWord word,
     TIndex start_bit)
 {
     if (!word)

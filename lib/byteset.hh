@@ -1,12 +1,10 @@
-#ifndef optimistic_byteset_hh
-#define optimistic_byteset_hh
+#ifndef byteset_hh
+#define byteset_hh
 
 #include <string.h>
 #include <assert.h>
 #include <memory> // for allocator
 #include "twiddle.hh"
-
-namespace optimistic {
 
 template<typename TAllocator = std::allocator<unsigned char> >
 class ByteSet : private TAllocator::template rebind<unsigned char>::other
@@ -259,7 +257,5 @@ protected:
         mask[key / word_bit_size] &= ~(1u << (key % word_bit_size));
     }
 };
-
-}
 
 #endif

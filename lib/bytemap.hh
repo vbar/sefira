@@ -1,13 +1,11 @@
-#ifndef optimistic_bytemap_hh
-#define optimistic_bytemap_hh
+#ifndef bytemap_hh
+#define bytemap_hh
 
 #include <string.h>
 #include <assert.h>
 #include <memory> // for allocator
 #include "twiddle.hh"
 #include "byteset.hh"
-
-namespace optimistic {
 
 template<typename TValue, typename TAllocator = std::allocator<unsigned char> >
 class ByteMap : private ByteSet<TAllocator>
@@ -620,7 +618,5 @@ private:
 	    sizeof(TValue) * word_bit_size);
     }
 };
-
-}
 
 #endif
