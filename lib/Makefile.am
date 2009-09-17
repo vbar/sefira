@@ -11,5 +11,5 @@ sefirainc_HEADERS = app.hh answer.hh bytemap.hh byteset.hh compare.hh compareimp
 
 libsefira_la_SOURCES = answer.cc compare.cc program.cc relresult.cc treetable.cc twiddle.cc xbuffer.cc xdoc.cc xutil.cc
 
-libsefira_la_LDFLAGS = -rpath $(libdir) -version-info 1:0:0 optimistic/liboptimistic.la straight/libstraight.la systematic/libsystematic.la -lxml2 -lstdc++
+libsefira_la_LDFLAGS = -rpath $(libdir) -version-info 1:0:0 optimistic/liboptimistic.la plastic/libplastic.la straight/libstraight.la systematic/libsystematic.la -lxml2 -lstdc++
 

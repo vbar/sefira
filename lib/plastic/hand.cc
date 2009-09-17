@@ -10,6 +10,11 @@
 #include <stdexcept>
 #include <assert.h>
 
+#define NOTRACE
+#include "trace.hh"
+
+#define TRACE_init false
+
 namespace plastic {
 
 Hand::Hand(xmlNodePtr f, xmlNodePtr g,
@@ -22,7 +27,10 @@ Hand::Hand(xmlNodePtr f, xmlNodePtr g,
     doubleSeq(g, anno2),
     masterScore(master_score)
 {
+    TRACE1("enter Hand ctor(0x" << std::hex << f << ", 0x" << std::hex << g << " ...)");
+    TRACE2(init, "n = " << n << ", " << "2 * m = " << mt2);
     PathSet fmain(f, decomposition->get_leaf(f));
+    TRACE2(init, "main path = " << fmain);
     for (TNodeIndex i = 1; i <= n; ++i)
     {
         xmlNodePtr xi = forrestEnum.get_xstep(i);
@@ -40,6 +48,7 @@ Hand::Hand(xmlNodePtr f, xmlNodePtr g,
 
 void Hand::compute()
 {
+    TRACE1("enter Hand::compute");
     SuccArray sleft(mt2, GraphPoint::small_first_index);
     SuccArray sright(mt2, GraphPoint::small_last_index);
     for (TNodeIndex i = 1; i <= n; ++i)
@@ -113,6 +122,7 @@ void Hand::compute()
 
 void Hand::cycle_left(TNodeIndex i, xmlNodePtr xi, bool on_main)
 {
+    TRACE2(init, "enter cycle_left(" << i << ", 0x" << std::hex << xi << ", " << on_main << ')');
     equal_to_xmlNodePtr is_equal;
 
     for (TNodeIndex j = 1; j <= mt2; ++j)
@@ -146,6 +156,7 @@ void Hand::cycle_left(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		    {
 			Answer a;
 			a.insert(xi);
+			masterScore->set(xi, yj, a);
 			edgeGraph.insert(
 			    GraphEdge(
 				GraphPoint(i - 1, j + 1, egj),
@@ -160,6 +171,7 @@ void Hand::cycle_left(TNodeIndex i, xmlNodePtr xi, bool on_main)
 
 void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
 {
+    TRACE2(init, "enter cycle_right(" << i << ", 0x" << std::hex << xi << ", " << on_main << ')');
     equal_to_xmlNodePtr is_equal;
 
     for (TNodeIndex j = 1; j <= mt2; ++j)
@@ -172,6 +184,7 @@ void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		xmlNodePtr yk = doubleSeq.get_ystep(k);
 		if (is_equal(xi, yk))
 		{
+		    TRACE2(init, "0x" << std::hex << xi << " == 0x" << std::hex << yk);
 		    if (!on_main)
 		    {
 		        const Answer *a = masterScore->get(xi, yk);
@@ -193,6 +206,7 @@ void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		    {
 			Answer a;
 			a.insert(xi);
+			masterScore->set(xi, yk, a);
 			edgeGraph.insert(
 			    GraphEdge(
 				GraphPoint(i - 1, egk, k - 1),
@@ -251,7 +265,7 @@ void Hand::insert_score(const GraphEdge &e, const Answer &a)
     {
         xmlNodePtr x = forrestEnum.get_xstep(
             e.get_head().get_coord(GraphPoint::big_index_index));
-	masterScore->insert(x, y, a);
+	masterScore->set(x, y, a);
     }
     else
     {

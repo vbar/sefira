@@ -1,4 +1,5 @@
 #include "treescore.hh"
+#include <utility>
 
 #define NOTRACE
 #include "trace.hh"
@@ -12,10 +13,15 @@ const Answer *TreeScore::get(xmlNodePtr f, xmlNodePtr g) const
     return (i == score.end()) ? 0 : &(i->second);
 }
 
-void TreeScore::insert(xmlNodePtr f, xmlNodePtr g, const Answer &a)
+void TreeScore::set(xmlNodePtr f, xmlNodePtr g, const Answer &a)
 {
     TRACE1("caching " << f << ", " << g);
-    score.insert(TMap::value_type(TMap::key_type(f, g), a));
+    std::pair<TMap::iterator, bool> inres = score.insert(
+        TMap::value_type(TMap::key_type(f, g), a));
+    if (!inres.second)
+    {
+	inres.first->second = a;
+    }
 }
 
 }

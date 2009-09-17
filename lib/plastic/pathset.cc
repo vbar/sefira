@@ -30,4 +30,21 @@ bool PathSet::is_on_path(xmlNodePtr node) const
     return i != path.end();
 }
 
+std::ostream &operator<<(std::ostream &os, const PathSet &p)
+{
+    os << "{";
+    std::string delim = " ";
+    for (PathSet::TPath::const_iterator iter = p.path.begin();
+	 iter != p.path.end();
+	 ++iter)
+    {
+        os << delim;
+	delim = ", ";
+	os << "0x" << std::hex << *iter;
+    }
+
+    os << " }";
+    return os;
+}
+
 }

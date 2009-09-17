@@ -2,7 +2,9 @@
 #include "answer.hh"
 #include "hand.hh"
 #include "postorder.hh"
-#include <assert.h>
+
+#define NOTRACE
+#include "trace.hh"
 
 namespace plastic {
 
@@ -21,6 +23,7 @@ Answer Builder::get_lcs()
 
 Answer Builder::compute_lcs(xmlNodePtr f, xmlNodePtr g)
 {
+    TRACE1("enter compute_lcs(0x" << std::hex << f << ", 0x" << std::hex << g << ')');
     PostOrder iter(f);
     PostOrder end;
     while (iter != end)
@@ -36,8 +39,16 @@ Answer Builder::compute_lcs(xmlNodePtr f, xmlNodePtr g)
     }
 
     const Answer *a = lcsMemo.get(f, g);
-    assert(a);
-    return *a;
+    if (a)
+    {
+        TRACE1("got score " << a->get_score());
+	return *a;
+    }
+    else
+    {
+	TRACE1("LCS not memoized - assuming empty");
+	return Answer();
+    }
 }
 
 }
