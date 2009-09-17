@@ -1,6 +1,6 @@
 ##process this file with automake to produce Makefile.in
 
-SUBDIRS = optimistic straight systematic
+SUBDIRS = optimistic plastic straight systematic
 
 INCLUDES=-I@LIBXML2_INCL_DIR@ -I.
 

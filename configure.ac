@@ -40,6 +40,7 @@ AC_CONFIG_FILES([Makefile
  	bin/Makefile
  	lib/Makefile
  	lib/optimistic/Makefile
+ 	lib/plastic/Makefile
  	lib/straight/Makefile
  	lib/systematic/Makefile
 	sefira.test/Makefile
