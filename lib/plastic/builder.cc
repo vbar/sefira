@@ -23,7 +23,7 @@ Answer Builder::get_lcs()
 
 Answer Builder::compute_lcs(xmlNodePtr f, xmlNodePtr g)
 {
-    TRACE1("enter compute_lcs(0x" << std::hex << f << ", 0x" << std::hex << g << ')');
+    TRACE1("enter compute_lcs(" << f << ", " << g << ')');
     PostOrder iter(f);
     PostOrder end;
     while (iter != end)
