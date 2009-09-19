@@ -40,7 +40,7 @@ std::ostream &operator<<(std::ostream &os, const PathSet &p)
     {
         os << delim;
 	delim = ", ";
-	os << "0x" << std::hex << *iter;
+	os << *iter;
     }
 
     os << " }";

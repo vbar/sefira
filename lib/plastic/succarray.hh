@@ -1,6 +1,7 @@
 #ifndef plastic_succarray_hh
 #define plastic_succarray_hh
 
+#include <iostream>
 #include "graphedge.hh"
 #include "graphpoint.hh"
 #include "nodeindex.hh"
@@ -17,6 +18,8 @@ private:
     const TNodeIndex keyIndex;
 
 public:
+    friend std::ostream &operator<<(std::ostream &os, const SuccArray &sa);
+
     SuccArray(TNodeIndex array_size, TNodeIndex key_index);
     ~SuccArray();
 
@@ -36,10 +39,14 @@ public:
 private:
     TNodeIndex rebase(TNodeIndex idx) const;
 
+    void dump(std::ostream &os, TNodeIndex i) const;
+
     // not implemented
     SuccArray(const SuccArray &other);
     SuccArray &operator=(const SuccArray &other);
 };
+
+std::ostream &operator<<(std::ostream &os, const SuccArray &sa);
 
 }
 

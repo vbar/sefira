@@ -8,7 +8,7 @@ namespace plastic {
 const Answer *ForrestScore::get(const GraphEdge &e) const
 {
     TMap::const_iterator i = score.find(e);
-    TRACE1(((i == score.end()) ? "not found " : "found ") << e);
+    TRACE1("ForrestScore: " << ((i == score.end()) ? "not found " : "found ") << e);
     return (i == score.end()) ? 0 : &(i->second);
 }
 

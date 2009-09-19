@@ -20,6 +20,7 @@ class Hand
 {
 private:
     const Decomposition *decomposition;
+    xmlNodePtr tree2;
     const TNodeIndex n;
     const TNodeIndex mt2;
     ForrestEnum forrestEnum;

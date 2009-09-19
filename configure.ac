@@ -46,6 +46,7 @@ AC_CONFIG_FILES([Makefile
 	sefira.test/Makefile
 	testdata/Makefile
 	testdata/optimistic/Makefile
+	testdata/plastic/Makefile
 	testdata/straight/Makefile
 	testdata/systematic/Makefile])
 AC_OUTPUT

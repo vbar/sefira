@@ -41,9 +41,37 @@ void Graph::insert(const GraphEdge &e, const Answer &a)
     }
 }
 
-std::ostream &operator<<(std::ostream &os, const Graph &g)
+#if 0
+static void dump(std::ostream &os, const Graph::TEdgeMap &edge_map)
 {
     os << "{\n";
+    std::string delim = "\t";
+    for (Graph::TEdgeMap::const_iterator iter = edge_map.begin();
+	 iter != edge_map.end();
+	 ++iter)
+    {
+        os << delim;
+	delim = ",\n\t";
+        os << iter->first << ": " << iter->second;
+    }
+  
+    os << " }";
+}
+#endif
+
+std::ostream &operator<<(std::ostream &os, const Graph &g)
+{
+#if 0
+    os << "{\n head = ";
+    dump(os, g.headMap);
+
+    os << "\n tail = ";
+    dump(os, g.tailMap);
+
+    os << "\n weight = {\n";
+#else
+    os << "{\n weight = {\n";
+#endif
     std::string delim = "\t";
     for (Graph::TFullMap::const_iterator iter = g.weightMap.begin();
 	 iter != g.weightMap.end();
@@ -54,7 +82,7 @@ std::ostream &operator<<(std::ostream &os, const Graph &g)
         os << iter->first << ": " << iter->second.get_score();
     }
 
-    os << "\n}";
+    os << "\n }\n}";
 
     return os;
 }
