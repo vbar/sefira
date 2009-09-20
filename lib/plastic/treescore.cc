@@ -16,20 +16,18 @@ const Answer *TreeScore::get(xmlNodePtr f, xmlNodePtr g) const
 
 void TreeScore::set(xmlNodePtr f, xmlNodePtr g, const Answer &a)
 {
-    TRACE1("TreeScore: " << f << ", " << g << " := " << a);
+    TRACE1("enter TreeScore::set(" << f << ", " << g << ", " << a << ')');
     std::pair<TMap::iterator, bool> inres = score.insert(
         TMap::value_type(TMap::key_type(f, g), a));
     if (!inres.second)
     {
         TRACE1("TreeScore: " << f << ", " << g << " had " << inres.first->second);
-        if (a.get_score() >= inres.first->second.get_score())
+        if (a.get_score() < inres.first->second.get_score())
 	{
-	    inres.first->second = a;
+	    throw std::logic_error("cached score can't go down");
 	}
-	else
-	{
-	    TRACE1("TreeScore: cached score can't go down - update ignored");
-	}
+
+	inres.first->second = a;
     }
 }
 

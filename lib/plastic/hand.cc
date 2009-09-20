@@ -14,9 +14,6 @@
 #define NOTRACE
 #include "trace.hh"
 
-#define TRACE_init true
-#define TRACE_compute true
-
 namespace plastic {
 
 Hand::Hand(xmlNodePtr f, xmlNodePtr g,
@@ -31,9 +28,9 @@ Hand::Hand(xmlNodePtr f, xmlNodePtr g,
     masterScore(master_score)
 {
     TRACE1("enter Hand ctor(" << f << ", " << g << ", ...)");
-    TRACE2(init, "n = " << n << ", " << "2 * m = " << mt2);
+    TRACE1("n = " << n << ", " << "2 * m = " << mt2);
     PathSet fmain(f, decomposition->get_leaf(f));
-    TRACE2(init, "main path = " << fmain);
+    TRACE1("main path = " << fmain);
     for (TNodeIndex i = 1; i <= n; ++i)
     {
         xmlNodePtr xi = forrestEnum.get_xstep(i);
@@ -58,13 +55,13 @@ void Hand::compute()
     SuccArray sright(mt2, GraphPoint::small_last_index);
     for (TNodeIndex i = 1; i <= n; ++i)
     {
-        TRACE2(compute, "i = " << i);
+        TRACE1("i = " << i);
         Graph::TRange trng = edgeGraph.get_tail_range(i - 1);
 	for (Graph::TConstIterator iter = trng.first;
 	     iter != trng.second;
 	     ++iter)
 	{
-	    TRACE2(compute, "preprocessing " << iter->second);
+	    TRACE1("preprocessing " << iter->second);
 	    const GraphPoint &tail = iter->second.get_tail();
   	    TNodeIndex j = tail.get_coord(
 	        GraphPoint::small_first_index);
@@ -78,7 +75,7 @@ void Hand::compute()
 	    }
 
 	    Answer c = edgeGraph.get(iter->second);
-	    TRACE2(compute, "w = " << c);
+	    TRACE1("w = " << c);
 	    a.insert(c);
 	    insert_score(iter->second, a);
 	}
@@ -89,7 +86,7 @@ void Hand::compute()
 	     iter != hrng.second;
 	     ++iter)
 	{
-	    TRACE2(compute, "maximizing " << iter->second);
+	    TRACE1("maximizing " << iter->second);
 	    const GraphPoint &head = iter->second.get_head();
   	    TNodeIndex j = head.get_coord(
 	        GraphPoint::small_first_index);
@@ -97,14 +94,15 @@ void Hand::compute()
 	        GraphPoint::small_last_index);
 	    Answer a = get_score(iter->second);
 	    TNodeIndex s = a.get_score();
-	    TRACE2(compute, "s = " << s);
+	    TRACE1("s = " << s);
 	    if (is_right)
 	    {
 		Answer b = get_score_cond(sright.pred(j, k));
-		TRACE2(compute, "b = " << b.get_score());
+		TRACE1("b = " << b.get_score());
 		if (s > b.get_score())
 		{
-		    sright.insert(j, iter->second);
+		    sright.set(j, iter->second);
+		    TRACE1("new sright = " << sright);
 		    GraphEdge *ep = sright.succ(j, k + 1);
 		    while (ep && (get_score_sum(*ep) <= s))
 		    {
@@ -116,10 +114,10 @@ void Hand::compute()
 	    else
 	    {
 		Answer b = get_score_cond(sleft.succ(k, j));
-		TRACE2(compute, "b = " << b.get_score());
+		TRACE1("b = " << b.get_score());
 		if (s > b.get_score())
 		{
-		    sleft.insert(k, iter->second);
+		    sleft.set(k, iter->second);
 		    GraphEdge *ep = sleft.pred(k, j - 1);
 		    while (ep && (get_score_sum(*ep) <= s))
 		    {
@@ -133,7 +131,7 @@ void Hand::compute()
 	if (is_right)
 	{
 	    Answer t = get_score_cond(sright.pred(1, mt2));
-	    TRACE2(compute, "right total = " << t);
+	    TRACE1("right total = " << t);
 	    if (t.get_score() > 0)
 	    {
 	        masterScore->set(forrestEnum.get_xstep(i), tree2, t);
@@ -142,7 +140,7 @@ void Hand::compute()
 	else
 	{
 	    Answer t = get_score_cond(sleft.succ(mt2, 1));
-	    TRACE2(compute, "left total = " << t);
+	    TRACE1("left total = " << t);
 	    if (t.get_score() > 0)
 	    {
 		masterScore->set(forrestEnum.get_xstep(i), tree2, t);
@@ -157,7 +155,7 @@ void Hand::compute()
 
 void Hand::cycle_left(TNodeIndex i, xmlNodePtr xi, bool on_main)
 {
-    TRACE2(init, "enter cycle_left(" << i << ", " << xi << ", " << on_main << ')');
+    TRACE1("enter cycle_left(" << i << ", " << xi << ", " << on_main << ')');
     equal_to_xmlNodePtr is_equal;
 
     for (TNodeIndex j = 1; j <= mt2; ++j)
@@ -206,7 +204,7 @@ void Hand::cycle_left(TNodeIndex i, xmlNodePtr xi, bool on_main)
 
 void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
 {
-    TRACE2(init, "enter cycle_right(" << i << ", " << xi << ", " << on_main << ')');
+    TRACE1("enter cycle_right(" << i << ", " << xi << ", " << on_main << ')');
     equal_to_xmlNodePtr is_equal;
 
     for (TNodeIndex j = 1; j <= mt2; ++j)
@@ -219,7 +217,7 @@ void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		xmlNodePtr yk = doubleSeq.get_ystep(k);
 		if (is_equal(xi, yk))
 		{
-		    TRACE2(init, xi << " == " << yk);
+		    TRACE1(xi << " == " << yk);
 		    if (!on_main)
 		    {
 		        const Answer *a = masterScore->get(xi, yk);
@@ -284,7 +282,7 @@ Answer Hand::get_score(const GraphEdge &e) const
 	}
 	else
 	{
-	    TRACE2(compute, "using weight of " << e << " as score");
+	    TRACE1("using weight of " << e << " as score");
 	    return edgeGraph.get(e);
 	}
     }
@@ -292,7 +290,7 @@ Answer Hand::get_score(const GraphEdge &e) const
 
 void Hand::insert_score(const GraphEdge &e, const Answer &a)
 {
-    TRACE2(compute, "enter insert_score(" << e << ", " << a.get_score() << ')');
+    TRACE1("enter insert_score(" << e << ", " << a.get_score() << ')');
     xmlNodePtr y = doubleSeq.get_ystep(
         e.get_head().get_coord(GraphPoint::small_first_index));
     assert(y);
@@ -305,12 +303,12 @@ void Hand::insert_score(const GraphEdge &e, const Answer &a)
         xmlNodePtr x = forrestEnum.get_xstep(
             e.get_head().get_coord(GraphPoint::big_index_index));
 	masterScore->set(x, y, a);
-	TRACE2(compute, "to master");
+	TRACE1("to master");
     }
     else
     {
 	localScore.insert(e, a);
-	TRACE2(compute, "to local");
+	TRACE1("to local");
     }
 }
 

@@ -60,10 +60,10 @@ GraphEdge *SuccArray::succ(TNodeIndex idx, unsigned short key) const
     }
 }
 
-void SuccArray::insert(TNodeIndex idx, const GraphEdge &e)
+void SuccArray::set(TNodeIndex idx, const GraphEdge &e)
 {
     TRACE1("SuccArray: " << idx << ", " << e.get_head().get_coord(keyIndex) << " := " << e);
-    array[rebase(idx)].insert(e.get_head().get_coord(keyIndex), e);
+    array[rebase(idx)].set(e.get_head().get_coord(keyIndex), e);
 }
 
 void SuccArray::erase(TNodeIndex idx, unsigned short key)

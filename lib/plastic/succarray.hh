@@ -27,7 +27,7 @@ public:
 
     GraphEdge *succ(TNodeIndex idx, unsigned short key) const;
 
-    void insert(TNodeIndex idx, const GraphEdge &e);
+    void set(TNodeIndex idx, const GraphEdge &e);
 
     void erase(TNodeIndex idx, unsigned short key);
 
