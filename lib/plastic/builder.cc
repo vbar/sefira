@@ -14,6 +14,8 @@ Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
     decomposition(tree1, tree2),
     anno2(tree2)
 {
+    TRACE1("root1 = " << tree1);
+    TRACE1("root2 = " << tree2);
 }
 
 Answer Builder::get_lcs()
@@ -31,7 +33,7 @@ Answer Builder::compute_lcs(xmlNodePtr f, xmlNodePtr g)
 	xmlNodePtr x = *iter;
 	if (decomposition.get_leaf(x))
 	{
-	    Hand hand(f, g, &decomposition, anno2, &lcsMemo);
+	    Hand hand(x, g, &decomposition, anno2, &lcsMemo);
 	    hand.compute();
 	}
 

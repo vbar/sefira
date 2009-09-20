@@ -2,6 +2,9 @@
 #include <stdexcept>
 #include <utility>
 
+#define NOTRACE
+#include "trace.hh"
+
 namespace plastic {
 
 MatchMap::MatchMap(xmlNodePtr tree1, xmlNodePtr tree2)
@@ -17,6 +20,7 @@ MatchMap::MatchMap(xmlNodePtr tree1, xmlNodePtr tree2)
 
 void MatchMap::fill_density(xmlNodePtr t, TDensityMap &d)
 {
+    TRACE1("enter fill_density(" << t << ", ...)");
     std::pair<TDensityMap::iterator, bool> inres = d.insert(
         TDensityMap::value_type(t, 1));
     if (!inres.second) {
@@ -42,6 +46,7 @@ TNodeIndex MatchMap::get_count(xmlNodePtr n) const
 
 TNodeIndex MatchMap::compute_match_count(xmlNodePtr n, const TDensityMap &d)
 {
+    TRACE1("enter compute_match_count(" << n << ", ...)");
     TMatchMap::const_iterator i = matchMap.find(n);
     if (i != matchMap.end()) {
         return i->second;

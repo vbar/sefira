@@ -1,6 +1,9 @@
 #include "postorderletter.hh"
 #include <stdexcept>
 
+#define NOTRACE
+#include "trace.hh"
+
 namespace plastic
 {
 
@@ -15,6 +18,7 @@ PostOrderLetter::PostOrderLetter(xmlNodePtr sentinel):
     current(sentinel)
 {
     descend();
+    TRACE1("sentinel = " << sentinel << ", current = " << current);
 }
 
 void PostOrderLetter::inc()
