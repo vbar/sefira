@@ -1,4 +1,6 @@
 #include "forrestscore.hh"
+#include <stdexcept>
+#include <utility>
 
 #define NOTRACE
 #include "trace.hh"
@@ -14,8 +16,13 @@ const Answer *ForrestScore::get(const GraphEdge &e) const
 
 void ForrestScore::insert(const GraphEdge &e, const Answer &a)
 {
-    TRACE1("caching " << e);
-    score.insert(TMap::value_type(e, a));
+    TRACE1("enter ForrestScore::insert(" << e << ", " << a << ')');
+    std::pair<TMap::iterator, bool> inres = score.insert(
+        TMap::value_type(e, a));
+    if (!inres.second)
+    {
+	throw std::invalid_argument("edge already inserted");
+    }
 }
 
 }
