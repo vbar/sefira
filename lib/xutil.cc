@@ -202,7 +202,15 @@ string xutil::get_node_name(xmlNodePtr n)
 	out += ':';
     }
 
-    out += reinterpret_cast<const char *>(n->name);
+    if (n->name)
+    {
+	out += reinterpret_cast<const char *>(n->name);
+    }
+    else // 21Sep2009: does happen, although perhaps only in a buggy
+	 // program...
+    {
+	out += "<unnamed>";
+    }
 
     return out;
 }
