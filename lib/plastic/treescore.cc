@@ -14,6 +14,17 @@ const Answer *TreeScore::get(xmlNodePtr f, xmlNodePtr g) const
     return (i == score.end()) ? 0 : &(i->second);
 }
 
+void TreeScore::insert(xmlNodePtr f, xmlNodePtr g, const Answer &a)
+{
+    TRACE1("enter TreeScore::insert(" << f << ", " << g << ", " << a << ')');
+    std::pair<TMap::iterator, bool> inres = score.insert(
+        TMap::value_type(TMap::key_type(f, g), a));
+    if (!inres.second)
+    {
+        TRACE1("TreeScore: " << f << ", " << g << " had " << inres.first->second << " - no update");
+    }
+}
+
 void TreeScore::set(xmlNodePtr f, xmlNodePtr g, const Answer &a)
 {
     TRACE1("enter TreeScore::set(" << f << ", " << g << ", " << a << ')');

@@ -18,6 +18,8 @@ private:
 public:
     const Answer *get(xmlNodePtr f, xmlNodePtr g) const;
 
+    void insert(xmlNodePtr f, xmlNodePtr g, const Answer &a);
+
     void set(xmlNodePtr f, xmlNodePtr g, const Answer &a);
 };
 
