@@ -18,6 +18,8 @@ public:
     const Answer *get(const GraphEdge &e) const;
 
     void insert(const GraphEdge &e, const Answer &a);
+
+    void set(const GraphEdge &e, const Answer &a);
 };
 
 }

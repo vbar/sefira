@@ -25,4 +25,21 @@ void ForrestScore::insert(const GraphEdge &e, const Answer &a)
     }
 }
 
+void ForrestScore::set(const GraphEdge &e, const Answer &a)
+{
+    TRACE1("enter ForrestScore::set(" << e << ", " << a << ')');
+    std::pair<TMap::iterator, bool> inres = score.insert(
+        TMap::value_type(e, a));
+    if (!inres.second)
+    {
+        TRACE1("ForrestScore: " << e << " had " << inres.first->second);
+        if (a.get_score() < inres.first->second.get_score())
+	{
+	    throw std::logic_error("cached edge score can't go down");
+	}
+
+	inres.first->second = a;
+    }
+}
+
 }
