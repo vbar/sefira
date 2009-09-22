@@ -1,6 +1,7 @@
 #ifndef plastic_forrestenum_hh
 #define plastic_forrestenum_hh
 
+#include <iostream>
 #include <libxml/tree.h>
 #include "nodeindex.hh"
 
@@ -21,6 +22,8 @@ private:
     const TNodeIndex arraySize;
 
 public:
+    friend std::ostream &operator<<(std::ostream &os, const ForrestEnum &fe);
+
     ForrestEnum(xmlNodePtr f, const Decomposition &decomposition);
     ~ForrestEnum();
 
@@ -37,10 +40,14 @@ public:
 private:
     TNodeIndex rebase(TNodeIndex idx) const;
 
+    void dump(std::ostream &os, TNodeIndex i) const;
+
     // not implemented
     ForrestEnum(const ForrestEnum &other);
     ForrestEnum &operator=(const ForrestEnum &other);
 };
+
+std::ostream &operator<<(std::ostream &os, const ForrestEnum &fe);
 
 }
 

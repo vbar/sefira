@@ -31,7 +31,7 @@ ForrestEnum::ForrestEnum(xmlNodePtr f, const Decomposition &decomposition):
     }
 
     array[0].xstep = forrest.get_back(); // there's only one
-    array[0].left = false;
+    array[0].left = false; // so it is the rightmost root
 }
 
 ForrestEnum::~ForrestEnum()
@@ -54,6 +54,27 @@ TNodeIndex ForrestEnum::rebase(TNodeIndex idx) const
     }
 
     return idx;
+}
+
+void ForrestEnum::dump(std::ostream &os, TNodeIndex i) const
+{
+    Item *current = array + i;
+    os << "  ( " << current->xstep << ", " << current->left << " )";
+}
+
+std::ostream &operator<<(std::ostream &os, const ForrestEnum &fe)
+{
+    os << "[\n";
+    std::string delim;
+    for (TNodeIndex i = 0; i < fe.arraySize; ++i)
+    {
+        os << delim;
+	delim = ",\n";
+	fe.dump(os, i);
+    }
+
+    os << "\n]";
+    return os;
 }
 
 }
