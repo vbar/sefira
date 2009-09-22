@@ -53,6 +53,7 @@ void Hand::compute()
     TRACE1("enter Hand::compute");
     SuccArray sleft(mt2, GraphPoint::small_first_index);
     SuccArray sright(mt2, GraphPoint::small_last_index);
+    bool is_right;
     for (TNodeIndex i = 1; i <= n; ++i)
     {
         TRACE1("i = " << i);
@@ -80,7 +81,7 @@ void Hand::compute()
 	    insert_score(iter->second, a);
 	}
 
-	bool is_right = !forrestEnum.is_left(i);
+	is_right = !forrestEnum.is_left(i);
         Graph::TRange hrng = edgeGraph.get_head_range(i);
 	for (Graph::TConstIterator iter = hrng.first;
 	     iter != hrng.second;
@@ -127,23 +128,24 @@ void Hand::compute()
 	    }
 	}
 
-	if (is_right)
+    }
+
+    if (is_right)
+    {
+	Answer t = get_score_cond(sright.pred(1, mt2));
+	TRACE1("right total = " << t);
+	if (t.get_score() > 0)
 	{
-	    Answer t = get_score_cond(sright.pred(1, mt2));
-	    TRACE1("right total = " << t);
-	    if (t.get_score() > 0)
-	    {
-	        masterScore->set(forrestEnum.get_xstep(i), tree2, t);
-	    }
+	    masterScore->set(forrestEnum.get_xstep(n), tree2, t);
 	}
-	else
+    }
+    else
+    {
+	Answer t = get_score_cond(sleft.succ(mt2, 1));
+	TRACE1("left total = " << t);
+	if (t.get_score() > 0)
 	{
-	    Answer t = get_score_cond(sleft.succ(mt2, 1));
-	    TRACE1("left total = " << t);
-	    if (t.get_score() > 0)
-	    {
-		masterScore->set(forrestEnum.get_xstep(i), tree2, t);
-	    }
+	    masterScore->set(forrestEnum.get_xstep(n), tree2, t);
 	}
     }
 
