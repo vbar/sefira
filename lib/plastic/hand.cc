@@ -102,7 +102,6 @@ void Hand::compute()
 		if (s > b.get_score())
 		{
 		    sright.set(j, iter->second);
-		    TRACE1("new sright = " << sright);
 		    GraphEdge *ep = sright.succ(j, k + 1);
 		    while (ep && (get_score_sum(*ep) <= s))
 		    {
