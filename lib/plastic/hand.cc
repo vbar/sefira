@@ -190,7 +190,7 @@ void Hand::cycle_left(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		    {
 			Answer a;
 			a.insert(xi);
-			masterScore->set(xi, yj, a);
+			masterScore->insert(xi, yj, a);
 			edgeGraph.insert(
 			    GraphEdge(
 				GraphPoint(i - 1, j + 1, egj),
@@ -240,7 +240,7 @@ void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		    {
 			Answer a;
 			a.insert(xi);
-			masterScore->set(xi, yk, a);
+			masterScore->insert(xi, yk, a);
 			edgeGraph.insert(
 			    GraphEdge(
 				GraphPoint(i - 1, egk, k - 1),
