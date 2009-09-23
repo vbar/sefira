@@ -3,23 +3,23 @@
 
 #include <map>
 #include "graphedge.hh"
-#include "answer.hh"
+#include "relresult.hh"
 
 namespace plastic {
 
 class ForrestScore
 {
 private:
-    typedef std::map<GraphEdge, Answer> TMap;
+    typedef std::map<GraphEdge, RelResult> TMap;
 
     TMap score;
 
 public:
-    const Answer *get(const GraphEdge &e) const;
+    const RelResult *get(const GraphEdge &e) const;
 
-    void insert(const GraphEdge &e, const Answer &a);
+    void insert(const GraphEdge &e, const RelResult &r);
 
-    void set(const GraphEdge &e, const Answer &a);
+    void set(const GraphEdge &e, const RelResult &r);
 };
 
 }

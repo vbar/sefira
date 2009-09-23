@@ -4,21 +4,21 @@
 #include <map>
 #include <utility>
 #include <libxml/tree.h>
-#include "answer.hh"
+#include "relresult.hh"
 
 namespace plastic {
 
 class TreeScore
 {
 private:
-    typedef std::map<std::pair<xmlNodePtr, xmlNodePtr>, Answer> TMap;
+    typedef std::map<std::pair<xmlNodePtr, xmlNodePtr>, RelResult> TMap;
 
     TMap score;
 
 public:
-    const Answer *get(xmlNodePtr f, xmlNodePtr g) const;
+    const RelResult *get(xmlNodePtr f, xmlNodePtr g) const;
 
-    void update(xmlNodePtr f, xmlNodePtr g, const Answer &a);
+    void update(xmlNodePtr f, xmlNodePtr g, const RelResult &r);
 };
 
 }

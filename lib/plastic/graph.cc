@@ -7,7 +7,7 @@
 
 namespace plastic {
 
-Answer Graph::get(const GraphEdge &e) const
+RelResult Graph::get(const GraphEdge &e) const
 {
     TFullMap::const_iterator iter = weightMap.find(e);
     if (iter == weightMap.end())
@@ -20,7 +20,7 @@ Answer Graph::get(const GraphEdge &e) const
     return iter->second;
 }
 
-void Graph::insert(const GraphEdge &e, const Answer &a)
+void Graph::insert(const GraphEdge &e, const RelResult &r)
 {
     headMap.insert(
 	TEdgeMap::value_type(
@@ -32,7 +32,7 @@ void Graph::insert(const GraphEdge &e, const Answer &a)
 	    e));
 
     std::pair<TFullMap::iterator, bool> inres = weightMap.insert(
-	TFullMap::value_type(e, a));
+	TFullMap::value_type(e, r));
     if (!inres.second)
     {
         std::stringstream ss;

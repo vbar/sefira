@@ -1,5 +1,6 @@
 #include "builder.hh"
 #include "answer.hh"
+#include "relresult.hh"
 #include "hand.hh"
 #include "postorder.hh"
 
@@ -20,10 +21,21 @@ Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
 
 Answer Builder::get_lcs()
 {
-    return compute_lcs(tree1, tree2);
+    RelResult r = compute_lcs(tree1, tree2);
+
+    Answer a;
+    for (RelResult::TSet::const_iterator i = r.begin();
+	 i != r.end();
+	 ++i)
+    {
+	xmlNodePtr n = decomposition.get_at(*i);
+	a.insert(n);
+    }
+
+    return a;
 }
 
-Answer Builder::compute_lcs(xmlNodePtr f, xmlNodePtr g)
+RelResult Builder::compute_lcs(xmlNodePtr f, xmlNodePtr g)
 {
     TRACE1("enter compute_lcs(" << f << ", " << g << ')');
     PostOrder iter(f);
@@ -40,16 +52,16 @@ Answer Builder::compute_lcs(xmlNodePtr f, xmlNodePtr g)
 	++iter;
     }
 
-    const Answer *a = lcsMemo.get(f, g);
-    if (a)
+    const RelResult *r = lcsMemo.get(f, g);
+    if (r)
     {
-        TRACE1("got score " << a->get_score());
-	return *a;
+        TRACE1("got score " << r->get_score());
+	return *r;
     }
     else
     {
 	TRACE1("LCS not memoized - assuming empty");
-	return Answer();
+	return RelResult();
     }
 }
 

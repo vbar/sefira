@@ -15,8 +15,17 @@ TNodeIndex TreeAnno::get_desc_count(xmlNodePtr node) const
     return i->second.get_desc_count();
 }
 
+TNodeIndex TreeAnno::get_preorder(xmlNodePtr node) const
+{
+    TAnno::const_iterator i = get(node);
+    return i->second.get_preorder();
+}
+
 NodeAnno *TreeAnno::fill(xmlNodePtr node)
 {
+    TNodeIndex node_preorder = treeTable.next();
+    treeTable.insert(node);
+
     TNodeIndex sum = 0;
     xmlNodePtr ch = node->children;
     while (ch) {
@@ -28,7 +37,7 @@ NodeAnno *TreeAnno::fill(xmlNodePtr node)
     }
 
     std::pair<TAnno::iterator, bool> inres = anno.insert(
-        TAnno::value_type(node, NodeAnno(sum)));
+        TAnno::value_type(node, NodeAnno(sum, node_preorder)));
     if (!inres.second) {
         throw std::logic_error("repeated insert");
     }

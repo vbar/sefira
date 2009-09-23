@@ -2,9 +2,9 @@
 #define plastic_graph_hh
 
 #include <map>
-#include "answer.hh"
 #include "graphedge.hh"
 #include "nodeindex.hh"
+#include "relresult.hh"
 
 namespace plastic {
 
@@ -16,7 +16,7 @@ public:
     typedef std::pair<TConstIterator, TConstIterator> TRange;
 
 private:
-    typedef std::map<GraphEdge, Answer> TFullMap;
+    typedef std::map<GraphEdge, RelResult> TFullMap;
 
     TEdgeMap headMap;
     TEdgeMap tailMap;  
@@ -35,9 +35,9 @@ public:
         return tailMap.equal_range(idx);
     }
 
-    Answer get(const GraphEdge &e) const;
+    RelResult get(const GraphEdge &e) const;
 
-    void insert(const GraphEdge &e, const Answer &a);
+    void insert(const GraphEdge &e, const RelResult &r);
 };
 
 }

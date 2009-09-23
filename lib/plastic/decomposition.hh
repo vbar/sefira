@@ -25,6 +25,16 @@ public:
     // trees must stay valid for the lifetime of the constructed object
     Decomposition(xmlNodePtr tree1, xmlNodePtr tree2);
 
+    xmlNodePtr get_at(TNodeIndex idx) const
+    {
+        return anno1.get_at(idx);
+    }
+
+    TNodeIndex get_preorder(xmlNodePtr node) const
+    {
+        return anno1.get_preorder(node);
+    }
+
     // returns NULL when path_root isn't a root of any path
     xmlNodePtr get_leaf(xmlNodePtr path_root) const;
 

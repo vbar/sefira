@@ -2,12 +2,12 @@
 #define plastic_hand_hh
 
 #include <libxml/tree.h>
-#include "answer.hh"
 #include "doubleseq.hh"
 #include "forrestenum.hh"
 #include "forrestscore.hh"
 #include "graph.hh"
 #include "nodeindex.hh"
+#include "relresult.hh"
 
 namespace plastic {
 
@@ -42,13 +42,13 @@ private:
     void cycle_left(TNodeIndex i, xmlNodePtr xi, bool on_main);
     void cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main);
 
-    Answer get_score(const GraphEdge &e) const;
+    RelResult get_score(const GraphEdge &e) const;
 
-    Answer get_score_cond(const GraphEdge *ep) const
+    RelResult get_score_cond(const GraphEdge *ep) const
     {
 	if (!ep)
 	{
-	  return Answer();
+	  return RelResult();
 	}
 
 	return get_score(*ep);
@@ -56,11 +56,11 @@ private:
 
     TNodeIndex get_score_sum(const GraphEdge &e) const
     {
-        Answer a = get_score(e);
-	return a.get_score();
+        RelResult r = get_score(e);
+	return r.get_score();
     }
 
-    void update_score(const GraphEdge &e, const Answer &a);
+    void update_score(const GraphEdge &e, const RelResult &r);
 
     // not implemented
     Hand(const Hand &other);

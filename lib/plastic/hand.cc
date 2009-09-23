@@ -67,14 +67,14 @@ void Hand::compute()
 	        GraphPoint::small_first_index);
   	    TNodeIndex k = tail.get_coord(
 	        GraphPoint::small_last_index);
-	    Answer a = get_score_cond(sright.pred(j, k));
-	    Answer b = get_score_cond(sleft.succ(k, j));
+	    RelResult a = get_score_cond(sright.pred(j, k));
+	    RelResult b = get_score_cond(sleft.succ(k, j));
 	    if (a.get_score() < b.get_score())
 	    {
 		a = b;
 	    }
 
-	    Answer c = edgeGraph.get(iter->second);
+	    RelResult c = edgeGraph.get(iter->second);
 	    TRACE1("w = " << c);
 	    a.insert(c);
 	    localScore.set(iter->second, a);
@@ -97,12 +97,12 @@ void Hand::compute()
 		throw std::logic_error("invalid edge head");
 	    }
 
-	    Answer a = get_score(iter->second);
+	    RelResult a = get_score(iter->second);
 	    TNodeIndex s = a.get_score();
 	    TRACE1("s = " << s);
 	    if (is_right)
 	    {
-		Answer b = get_score_cond(sright.pred(j, k));
+		RelResult b = get_score_cond(sright.pred(j, k));
 		TRACE1("b = " << b.get_score());
 		if (s > b.get_score())
 		{
@@ -120,7 +120,7 @@ void Hand::compute()
 		{
 		    TRACE1("right: updating score of " << *ep);
 		    GraphEdge edge(*ep);
-		    Answer c = get_score(edge);
+		    RelResult c = get_score(edge);
 		    GraphPoint &head = edge.get_head();
 		    for (TNodeIndex ii = i; ii <= n; ++ii)
 		    {
@@ -135,7 +135,7 @@ void Hand::compute()
 	    }
 	    else
 	    {
-		Answer b = get_score_cond(sleft.succ(k, j));
+		RelResult b = get_score_cond(sleft.succ(k, j));
 		TRACE1("b = " << b.get_score());
 		if (s > b.get_score())
 		{
@@ -153,7 +153,7 @@ void Hand::compute()
 		{
 		    TRACE1("left: updating score of " << *ep);
 		    GraphEdge edge(*ep);
-		    Answer c = get_score(edge);
+		    RelResult c = get_score(edge);
 		    GraphPoint &head = edge.get_head();
 		    for (TNodeIndex ii = i; ii <= n; ++ii)
 		    {
@@ -191,8 +191,8 @@ void Hand::cycle_left(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		{
 		    if (!on_main)
 		    {
-		        const Answer *a = masterScore->get(xi, yj);
-			if (!a)
+		        const RelResult *r = masterScore->get(xi, yj);
+			if (!r)
 			{
 			    throw std::logic_error("expected distance not computed");
 			}
@@ -204,17 +204,17 @@ void Hand::cycle_left(TNodeIndex i, xmlNodePtr xi, bool on_main)
 				    egj,
 				    k),
 				GraphPoint(i, j, k)),
-			    *a);
+			    *r);
 		    }
 		    else
 		    {
-			Answer a;
-			a.insert(xi);
+			RelResult r;
+			r.insert(decomposition->get_preorder(xi));
 			edgeGraph.insert(
 			    GraphEdge(
 				GraphPoint(i - 1, j + 1, egj),
 				GraphPoint(i, j, k)),
-			    a);
+			    r);
 		    }
 		}
 	    }
@@ -240,8 +240,8 @@ void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		    TRACE1(xi << " == " << yk);
 		    if (!on_main)
 		    {
-		        const Answer *a = masterScore->get(xi, yk);
-			if (!a)
+		        const RelResult *r = masterScore->get(xi, yk);
+			if (!r)
 			{
 			    throw std::logic_error("expected distance not computed");
 			}
@@ -253,17 +253,17 @@ void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
 				      j,
 				      egk),
 				GraphPoint(i, j, k)),
-			    *a);
+			    *r);
 		    }
 		    else
 		    {
-			Answer a;
-			a.insert(xi);
+			RelResult r;
+			r.insert(decomposition->get_preorder(xi));
 			edgeGraph.insert(
 			    GraphEdge(
 				GraphPoint(i - 1, egk, k - 1),
 				GraphPoint(i, j, k)),
-			    a);
+			    r);
 		    }
 		}
 	    }
@@ -271,12 +271,12 @@ void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
     }
 }
 
-Answer Hand::get_score(const GraphEdge &e) const
+RelResult Hand::get_score(const GraphEdge &e) const
 {
-    const Answer *a = localScore.get(e);
-    if (a)
+    const RelResult *r = localScore.get(e);
+    if (r)
     {
-	return *a;
+	return *r;
     }
     else
     {
@@ -285,9 +285,9 @@ Answer Hand::get_score(const GraphEdge &e) const
     }
 }
 
-void Hand::update_score(const GraphEdge &e, const Answer &a)
+void Hand::update_score(const GraphEdge &e, const RelResult &r)
 {
-    TRACE1("enter update_score(" << e << ", " << a.get_score() << ')');
+    TRACE1("enter update_score(" << e << ", " << r.get_score() << ')');
     xmlNodePtr x = forrestEnum.get_xtree(
         e.get_head().get_coord(GraphPoint::big_index_index));
     if (x)
@@ -300,7 +300,7 @@ void Hand::update_score(const GraphEdge &e, const Answer &a)
 	assert(yp);
 	if (y == yp)
 	{
-	    masterScore->update(x, y, a);
+	    masterScore->update(x, y, r);
 	}
 	else
 	{

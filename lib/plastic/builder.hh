@@ -7,6 +7,7 @@
 #include "treeanno.hh"
 
 class Answer;
+class RelResult;
 
 namespace plastic {
 
@@ -28,8 +29,8 @@ public:
     Answer get_lcs();
 
 private:
-    Answer get_lcs(xmlNodePtr f, xmlNodePtr g);
-    Answer compute_lcs(xmlNodePtr f, xmlNodePtr g);
+    RelResult get_lcs(xmlNodePtr f, xmlNodePtr g);
+    RelResult compute_lcs(xmlNodePtr f, xmlNodePtr g);
 };
 
 }

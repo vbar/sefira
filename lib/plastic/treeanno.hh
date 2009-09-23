@@ -5,6 +5,7 @@
 #include <libxml/tree.h>
 #include "nodeindex.hh"
 #include "nodeanno.hh"
+#include "treetable.hh"
 
 namespace plastic {
 
@@ -13,6 +14,7 @@ class TreeAnno
 private:
     typedef std::map<xmlNodePtr, NodeAnno> TAnno;
 
+    TreeTable treeTable;
     TAnno anno;
 
 public:
@@ -20,7 +22,14 @@ public:
     // of the object
     TreeAnno(xmlNodePtr doc_elem);
 
+    xmlNodePtr get_at(TNodeIndex idx) const
+    {
+        return treeTable.get(idx);
+    }
+
     TNodeIndex get_desc_count(xmlNodePtr node) const;
+
+    TNodeIndex get_preorder(xmlNodePtr node) const;
 
 private:
     NodeAnno *fill(xmlNodePtr node);
