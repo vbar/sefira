@@ -16,6 +16,7 @@ private:
     {
         xmlNodePtr xstep;
         bool left;
+        bool tree;
     };
 
     Item *array;
@@ -32,9 +33,18 @@ public:
         return array[rebase(idx)].left;
     }
 
+    // returns a valid node (never NULL)
     xmlNodePtr get_xstep(TNodeIndex idx) const
     {
         return array[rebase(idx)].xstep;
+    }
+
+    // returns the root of F(idx) when it's a tree, NULL for generic
+    // forrests
+    xmlNodePtr get_xtree(TNodeIndex idx) const
+    {
+        Item *current = array + rebase(idx);
+        return current->tree ? current->xstep : 0;
     }
 
 private:

@@ -29,6 +29,7 @@ Hand::Hand(xmlNodePtr f, xmlNodePtr g,
 {
     TRACE1("enter Hand ctor(" << f << ", " << g << ", ...)");
     TRACE1("n = " << n << ", " << "2 * m = " << mt2);
+    TRACE1("forrestEnum = " << forrestEnum);
     PathSet fmain(f, decomposition->get_leaf(f));
     TRACE1("main path = " << fmain);
     for (TNodeIndex i = 1; i <= n; ++i)
@@ -262,10 +263,15 @@ Answer Hand::get_score(const GraphEdge &e) const
         e.get_head().get_coord(GraphPoint::small_last_index));
     assert(yp);
 
+    xmlNodePtr x = 0;
     if (y == yp)
     {
-        xmlNodePtr x = forrestEnum.get_xstep(
+        x = forrestEnum.get_xtree(
 	    e.get_head().get_coord(GraphPoint::big_index_index));
+    }
+
+    if (x)
+    {
 	const Answer *a = masterScore->get(x, y);
 	if (!a)
 	{
@@ -299,10 +305,15 @@ void Hand::insert_score(const GraphEdge &e, const Answer &a)
         e.get_head().get_coord(GraphPoint::small_last_index));
     assert(yp);
 
+    xmlNodePtr x = 0;
     if (y == yp)
     {
-        xmlNodePtr x = forrestEnum.get_xstep(
+        x = forrestEnum.get_xtree(
             e.get_head().get_coord(GraphPoint::big_index_index));
+    }
+
+    if (x)
+    {
 	masterScore->set(x, y, a);
 	TRACE1("to master");
     }

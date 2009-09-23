@@ -4,6 +4,7 @@
 #include "pathset.hh"
 #include <set>
 #include <stdexcept>
+#include <assert.h>
 
 namespace plastic {
 
@@ -15,6 +16,7 @@ ForrestEnum::ForrestEnum(xmlNodePtr f, const Decomposition &decomposition):
     array = new Item[arraySize];
     Forrest forrest;
     forrest.insert(f);
+    array[arraySize - 1].tree = true;
     for (TNodeIndex i = arraySize - 1; i > 0; --i)
     {
 	xmlNodePtr left = forrest.get_front();
@@ -28,8 +30,11 @@ ForrestEnum::ForrestEnum(xmlNodePtr f, const Decomposition &decomposition):
 	    array[i].xstep = forrest.pop_back_root();
 	    array[i].left = false;
 	}
+
+	array[i - 1].tree = forrest.is_tree();
     }
 
+    assert(array[0].tree);
     array[0].xstep = forrest.get_back(); // there's only one
     array[0].left = false; // so it is the rightmost root
 }
@@ -59,7 +64,8 @@ TNodeIndex ForrestEnum::rebase(TNodeIndex idx) const
 void ForrestEnum::dump(std::ostream &os, TNodeIndex i) const
 {
     Item *current = array + i;
-    os << "  ( " << current->xstep << ", " << current->left << " )";
+    os << "  ( " << current->xstep << ", " << current->left <<
+        ", " << current->tree << " )";
 }
 
 std::ostream &operator<<(std::ostream &os, const ForrestEnum &fe)
