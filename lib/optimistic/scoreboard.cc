@@ -1,4 +1,6 @@
 #include "scoreboard.hh"
+#include <sstream>
+#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -9,7 +11,9 @@ RelResult ScoreBoard::get(const GraphEdge &e) const
     TMap::const_iterator iter = scoreMap.find(e);
     if (iter == scoreMap.end())
     {
-	return RelResult();
+        std::stringstream ss;
+	ss << e << " not yet scored";
+	throw std::invalid_argument(ss.str());
     }
 
     return iter->second;
@@ -17,7 +21,12 @@ RelResult ScoreBoard::get(const GraphEdge &e) const
 
 void ScoreBoard::insert(const GraphEdge &e, const RelResult &r)
 {
-    scoreMap.insert(TMap::value_type(e, r));
+    std::pair<TMap::iterator, bool> inres = scoreMap.insert(
+        TMap::value_type(e, r));
+    if (!inres.second)
+    {
+	throw std::invalid_argument("edge already inserted");
+    }
 }
 
 std::ostream &operator<<(std::ostream &os, const ScoreBoard &b)
