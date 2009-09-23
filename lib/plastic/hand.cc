@@ -20,7 +20,6 @@ Hand::Hand(xmlNodePtr f, xmlNodePtr g,
         const Decomposition *decomposition, const TreeAnno &anno2,
 	TreeScore *master_score):
     decomposition(decomposition),
-    tree2(g),
     n(decomposition->get_size(f)),
     mt2(2 * (1 + anno2.get_desc_count(g))),
     forrestEnum(f, *decomposition),
@@ -54,7 +53,6 @@ void Hand::compute()
     TRACE1("enter Hand::compute");
     SuccArray sleft(mt2, GraphPoint::small_first_index);
     SuccArray sright(mt2, GraphPoint::small_last_index);
-    bool is_right;
     for (TNodeIndex i = 1; i <= n; ++i)
     {
         TRACE1("i = " << i);
@@ -79,10 +77,10 @@ void Hand::compute()
 	    Answer c = edgeGraph.get(iter->second);
 	    TRACE1("w = " << c);
 	    a.insert(c);
-	    insert_score(iter->second, a);
+	    localScore.set(iter->second, a);
 	}
 
-	is_right = !forrestEnum.is_left(i);
+	bool is_right = !forrestEnum.is_left(i);
         Graph::TRange hrng = edgeGraph.get_head_range(i);
 	for (Graph::TConstIterator iter = hrng.first;
 	     iter != hrng.second;
@@ -94,6 +92,11 @@ void Hand::compute()
 	        GraphPoint::small_first_index);
   	    TNodeIndex k = head.get_coord(
 	        GraphPoint::small_last_index);
+	    if (j > k - 1)
+	    {
+		throw std::logic_error("invalid edge head");
+	    }
+
 	    Answer a = get_score(iter->second);
 	    TNodeIndex s = a.get_score();
 	    TRACE1("s = " << s);
@@ -111,6 +114,24 @@ void Hand::compute()
 			ep = sright.succ(j, k + 1);
 		    }
 		}
+
+		GraphEdge *ep = sright.pred(j, k);
+		if (ep)
+		{
+		    TRACE1("right: updating score of " << *ep);
+		    GraphEdge edge(*ep);
+		    Answer c = get_score(edge);
+		    GraphPoint &head = edge.get_head();
+		    for (TNodeIndex ii = i; ii <= n; ++ii)
+		    {
+			head.set_coord(GraphPoint::big_index_index, ii);
+			for (TNodeIndex kk = k; kk <= mt2; ++kk)
+			{
+			    head.set_coord(GraphPoint::small_last_index, kk);
+			    update_score(edge, c);
+			}
+		    }
+		}
 	    }
 	    else
 	    {
@@ -126,27 +147,25 @@ void Hand::compute()
 			ep = sleft.pred(k, j - 1);
 		    }
 		}
+
+		GraphEdge *ep = sleft.succ(k, j);
+		if (ep)
+		{
+		    TRACE1("left: updating score of " << *ep);
+		    GraphEdge edge(*ep);
+		    Answer c = get_score(edge);
+		    GraphPoint &head = edge.get_head();
+		    for (TNodeIndex ii = i; ii <= n; ++ii)
+		    {
+			head.set_coord(GraphPoint::big_index_index, ii);
+			for (TNodeIndex jj = j; jj > 0; --jj)
+			{
+			    head.set_coord(GraphPoint::small_first_index, jj);
+			    update_score(edge, c);
+			}
+		    }
+		}
 	    }
-	}
-
-    }
-
-    if (is_right)
-    {
-	Answer t = get_score_cond(sright.pred(1, mt2));
-	TRACE1("right total = " << t);
-	if (t.get_score() > 0)
-	{
-	    masterScore->set(forrestEnum.get_xstep(n), tree2, t);
-	}
-    }
-    else
-    {
-	Answer t = get_score_cond(sleft.succ(mt2, 1));
-	TRACE1("left total = " << t);
-	if (t.get_score() > 0)
-	{
-	    masterScore->set(forrestEnum.get_xstep(n), tree2, t);
 	}
     }
 
@@ -191,7 +210,6 @@ void Hand::cycle_left(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		    {
 			Answer a;
 			a.insert(xi);
-			masterScore->insert(xi, yj, a);
 			edgeGraph.insert(
 			    GraphEdge(
 				GraphPoint(i - 1, j + 1, egj),
@@ -241,7 +259,6 @@ void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		    {
 			Answer a;
 			a.insert(xi);
-			masterScore->insert(xi, yk, a);
 			edgeGraph.insert(
 			    GraphEdge(
 				GraphPoint(i - 1, egk, k - 1),
@@ -256,71 +273,43 @@ void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
 
 Answer Hand::get_score(const GraphEdge &e) const
 {
-    xmlNodePtr y = doubleSeq.get_ystep(
-        e.get_head().get_coord(GraphPoint::small_first_index));
-    assert(y);
-    xmlNodePtr yp = doubleSeq.get_ystep(
-        e.get_head().get_coord(GraphPoint::small_last_index));
-    assert(yp);
-
-    xmlNodePtr x = 0;
-    if (y == yp)
+    const Answer *a = localScore.get(e);
+    if (a)
     {
-        x = forrestEnum.get_xtree(
-	    e.get_head().get_coord(GraphPoint::big_index_index));
-    }
-
-    if (x)
-    {
-	const Answer *a = masterScore->get(x, y);
-	if (!a)
-	{
-	    throw std::logic_error("expected distance not in master score");
-	}
-
 	return *a;
     }
     else
     {
-	const Answer *a = localScore.get(e);
-	if (a)
-	{
-	    return *a;
-	}
-	else
-	{
-	    TRACE1("using weight of " << e << " as score");
-	    return edgeGraph.get(e);
-	}
+	TRACE1("using weight of " << e << " as score");
+	return edgeGraph.get(e);
     }
 }
 
-void Hand::insert_score(const GraphEdge &e, const Answer &a)
+void Hand::update_score(const GraphEdge &e, const Answer &a)
 {
-    TRACE1("enter insert_score(" << e << ", " << a.get_score() << ')');
-    xmlNodePtr y = doubleSeq.get_ystep(
-        e.get_head().get_coord(GraphPoint::small_first_index));
-    assert(y);
-    xmlNodePtr yp = doubleSeq.get_ystep(
-        e.get_head().get_coord(GraphPoint::small_last_index));
-    assert(yp);
-
-    xmlNodePtr x = 0;
-    if (y == yp)
-    {
-        x = forrestEnum.get_xtree(
-            e.get_head().get_coord(GraphPoint::big_index_index));
-    }
-
+    TRACE1("enter update_score(" << e << ", " << a.get_score() << ')');
+    xmlNodePtr x = forrestEnum.get_xtree(
+        e.get_head().get_coord(GraphPoint::big_index_index));
     if (x)
     {
-	masterScore->set(x, y, a);
-	TRACE1("to master");
+	xmlNodePtr y = doubleSeq.get_ystep(
+	    e.get_head().get_coord(GraphPoint::small_first_index));
+	assert(y);
+	xmlNodePtr yp = doubleSeq.get_ystep(
+	    e.get_head().get_coord(GraphPoint::small_last_index));
+	assert(yp);
+	if (y == yp)
+	{
+	    masterScore->update(x, y, a);
+	}
+	else
+	{
+	    TRACE1("small forrest isn't tree");
+	}
     }
     else
     {
-	localScore.insert(e, a);
-	TRACE1("to local");
+	TRACE1("big forrest isn't tree");
     }
 }
 

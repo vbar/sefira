@@ -33,6 +33,11 @@ public:
     {
         return point[index];
     }
+
+    void set_coord(TNodeIndex index, TNodeIndex value)
+    {
+        point[index] = value;
+    }
 };
 
 std::ostream &operator<<(std::ostream &os, const GraphPoint &pt);

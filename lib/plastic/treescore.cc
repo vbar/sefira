@@ -14,6 +14,7 @@ const Answer *TreeScore::get(xmlNodePtr f, xmlNodePtr g) const
     return (i == score.end()) ? 0 : &(i->second);
 }
 
+#if 0
 void TreeScore::insert(xmlNodePtr f, xmlNodePtr g, const Answer &a)
 {
     TRACE1("enter TreeScore::insert(" << f << ", " << g << ", " << a << ')');
@@ -24,21 +25,20 @@ void TreeScore::insert(xmlNodePtr f, xmlNodePtr g, const Answer &a)
         TRACE1("TreeScore: " << f << ", " << g << " had " << inres.first->second << " - no update");
     }
 }
+#endif
 
-void TreeScore::set(xmlNodePtr f, xmlNodePtr g, const Answer &a)
+void TreeScore::update(xmlNodePtr f, xmlNodePtr g, const Answer &a)
 {
-    TRACE1("enter TreeScore::set(" << f << ", " << g << ", " << a << ')');
+    TRACE1("enter TreeScore::update(" << f << ", " << g << ", " << a << ')');
     std::pair<TMap::iterator, bool> inres = score.insert(
         TMap::value_type(TMap::key_type(f, g), a));
     if (!inres.second)
     {
         TRACE1("TreeScore: " << f << ", " << g << " had " << inres.first->second);
-        if (a.get_score() < inres.first->second.get_score())
+        if (a.get_score() > inres.first->second.get_score())
 	{
-	    throw std::logic_error("cached score can't go down");
+	    inres.first->second = a;
 	}
-
-	inres.first->second = a;
     }
 }
 

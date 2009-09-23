@@ -31,6 +31,16 @@ public:
     {
         return head;
     }
+
+    GraphPoint &get_tail()
+    {
+        return tail;
+    }
+
+    GraphPoint &get_head()
+    {
+        return head;
+    }
 };
 
 std::ostream &operator<<(std::ostream &os, const GraphEdge &e);

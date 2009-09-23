@@ -20,7 +20,6 @@ class Hand
 {
 private:
     const Decomposition *decomposition;
-    xmlNodePtr tree2;
     const TNodeIndex n;
     const TNodeIndex mt2;
     ForrestEnum forrestEnum;
@@ -61,7 +60,7 @@ private:
 	return a.get_score();
     }
 
-    void insert_score(const GraphEdge &e, const Answer &a);
+    void update_score(const GraphEdge &e, const Answer &a);
 
     // not implemented
     Hand(const Hand &other);
