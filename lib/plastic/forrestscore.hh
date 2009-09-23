@@ -15,11 +15,10 @@ private:
     TMap score;
 
 public:
-    const RelResult *get(const GraphEdge &e) const;
+    // asking for edge which hadn't been scored yet is an error
+    RelResult get(const GraphEdge &e) const;
 
     void insert(const GraphEdge &e, const RelResult &r);
-
-    void set(const GraphEdge &e, const RelResult &r);
 };
 
 }

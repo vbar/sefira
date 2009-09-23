@@ -42,8 +42,6 @@ private:
     void cycle_left(TNodeIndex i, xmlNodePtr xi, bool on_main);
     void cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main);
 
-    RelResult get_score(const GraphEdge &e) const;
-
     RelResult get_score_cond(const GraphEdge *ep) const
     {
 	if (!ep)
@@ -51,12 +49,12 @@ private:
 	  return RelResult();
 	}
 
-	return get_score(*ep);
+	return localScore.get(*ep);
     }
 
     TNodeIndex get_score_sum(const GraphEdge &e) const
     {
-        RelResult r = get_score(e);
+        RelResult r = localScore.get(e);
 	return r.get_score();
     }
 

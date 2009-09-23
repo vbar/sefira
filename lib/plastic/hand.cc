@@ -77,7 +77,7 @@ void Hand::compute()
 	    RelResult c = edgeGraph.get(iter->second);
 	    TRACE1("w = " << c);
 	    a.insert(c);
-	    localScore.set(iter->second, a);
+	    localScore.insert(iter->second, a);
 	}
 
 	bool is_right = !forrestEnum.is_left(i);
@@ -97,7 +97,7 @@ void Hand::compute()
 		throw std::logic_error("invalid edge head");
 	    }
 
-	    RelResult a = get_score(iter->second);
+	    RelResult a = localScore.get(iter->second);
 	    TNodeIndex s = a.get_score();
 	    TRACE1("s = " << s);
 	    if (is_right)
@@ -120,7 +120,7 @@ void Hand::compute()
 		{
 		    TRACE1("right: updating score of " << *ep);
 		    GraphEdge edge(*ep);
-		    RelResult c = get_score(edge);
+		    RelResult c = localScore.get(edge);
 		    GraphPoint &head = edge.get_head();
 		    for (TNodeIndex ii = i; ii <= n; ++ii)
 		    {
@@ -153,7 +153,7 @@ void Hand::compute()
 		{
 		    TRACE1("left: updating score of " << *ep);
 		    GraphEdge edge(*ep);
-		    RelResult c = get_score(edge);
+		    RelResult c = localScore.get(edge);
 		    GraphPoint &head = edge.get_head();
 		    for (TNodeIndex ii = i; ii <= n; ++ii)
 		    {
@@ -268,20 +268,6 @@ void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		}
 	    }
 	}
-    }
-}
-
-RelResult Hand::get_score(const GraphEdge &e) const
-{
-    const RelResult *r = localScore.get(e);
-    if (r)
-    {
-	return *r;
-    }
-    else
-    {
-	TRACE1("using weight of " << e << " as score");
-	return edgeGraph.get(e);
     }
 }
 
