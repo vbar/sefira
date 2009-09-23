@@ -21,7 +21,7 @@ Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
 
 Answer Builder::get_lcs()
 {
-    RelResult r = compute_lcs(tree1, tree2);
+    RelResult r = compute_lcs();
 
     Answer a;
     for (RelResult::TSet::const_iterator i = r.begin();
@@ -35,24 +35,24 @@ Answer Builder::get_lcs()
     return a;
 }
 
-RelResult Builder::compute_lcs(xmlNodePtr f, xmlNodePtr g)
+RelResult Builder::compute_lcs()
 {
-    TRACE1("enter compute_lcs(" << f << ", " << g << ')');
-    PostOrder iter(f);
+    TRACE1("enter compute_lcs()");
+    PostOrder iter(tree1);
     PostOrder end;
     while (iter != end)
     {
 	xmlNodePtr x = *iter;
 	if (decomposition.get_leaf(x))
 	{
-	    Hand hand(x, g, &decomposition, anno2, &lcsMemo);
+	    Hand hand(x, tree2, &decomposition, anno2, &lcsMemo);
 	    hand.compute();
 	}
 
 	++iter;
     }
 
-    const RelResult *r = lcsMemo.get(f, g);
+    const RelResult *r = lcsMemo.get(tree1, tree2);
     if (r)
     {
         TRACE1("got score " << r->get_score());

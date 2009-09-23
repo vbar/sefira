@@ -29,8 +29,7 @@ public:
     Answer get_lcs();
 
 private:
-    RelResult get_lcs(xmlNodePtr f, xmlNodePtr g);
-    RelResult compute_lcs(xmlNodePtr f, xmlNodePtr g);
+    RelResult compute_lcs();
 };
 
 }
