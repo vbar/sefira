@@ -20,6 +20,7 @@ private:
     TCover cover;
 
     TreeAnno anno1;
+    TNodeIndex otherTreeSize;
 
 public:
     // trees must stay valid for the lifetime of the constructed object
@@ -41,6 +42,11 @@ public:
     TNodeIndex get_size(xmlNodePtr node) const
     {
         return 1 + anno1.get_desc_count(node);
+    }
+
+    TNodeIndex get_other_tree_size() const
+    {
+        return otherTreeSize;
     }
 
 private:

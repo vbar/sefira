@@ -1,13 +1,31 @@
 #include "doubleseq.hh"
 #include "treeanno.hh"
+#include <string.h>
 
 namespace plastic {
 
-DoubleSeq::DoubleSeq(xmlNodePtr g, const TreeAnno &anno):
-    arraySize(2 * (1 + anno.get_desc_count(g)))
+DoubleSeq::DoubleSeq(xmlNodePtr g, TNodeIndex sz):
+    treeSize(sz)
 {
-    array = new Item[arraySize];
+    array = new Item[2 * treeSize];
     fill(g, 0);
+}
+
+DoubleSeq::DoubleSeq(const DoubleSeq &other):
+    treeSize(other.treeSize)
+{
+    array = new Item[2 * treeSize];
+    memcpy(array, other.array, 2 * treeSize * sizeof(Item));
+}
+
+DoubleSeq &DoubleSeq::operator=(const DoubleSeq &other)
+{
+    treeSize = other.treeSize;
+    Item *a = new Item[2 * treeSize]; 
+    memcpy(a, other.array, 2 * treeSize * sizeof(Item));
+    delete [] array;
+    array = a;
+    return *this;
 }
 
 DoubleSeq::~DoubleSeq()

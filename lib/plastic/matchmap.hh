@@ -15,6 +15,7 @@ private:
     typedef std::map<xmlNodePtr, TNodeIndex, less_xmlNodePtr> TDensityMap;
 
     TMatchMap matchMap;
+    TNodeIndex otherTreeSize;
 
 public:
     // trees must stay valid for the lifetime of the constructed object
@@ -22,8 +23,13 @@ public:
 
     TNodeIndex get_count(xmlNodePtr n) const;
 
+    TNodeIndex get_other_tree_size() const
+    {
+        return otherTreeSize;
+    }
+
 private:
-    void fill_density(xmlNodePtr t, TDensityMap &d);
+    TNodeIndex fill_density(xmlNodePtr t, TDensityMap &d, TNodeIndex sz);
 
     TNodeIndex compute_match_count(xmlNodePtr n, const TDensityMap &d);
 

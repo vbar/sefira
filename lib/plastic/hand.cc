@@ -16,17 +16,18 @@
 
 namespace plastic {
 
-Hand::Hand(xmlNodePtr f, xmlNodePtr g,
-        const Decomposition *decomposition, const TreeAnno &anno2,
+Hand::Hand(xmlNodePtr f,
+        const Decomposition *decomposition,
+	const DoubleSeq &double_seq,
 	TreeScore *master_score):
     decomposition(decomposition),
     n(decomposition->get_size(f)),
-    mt2(2 * (1 + anno2.get_desc_count(g))),
+    mt2(2 * double_seq.get_tree_size()),
     forrestEnum(f, *decomposition),
-    doubleSeq(g, anno2),
+    doubleSeq(double_seq),
     masterScore(master_score)
 {
-    TRACE1("enter Hand ctor(" << f << ", " << g << ", ...)");
+    TRACE1("enter Hand ctor(" << f << ", ...)");
     TRACE1("n = " << n << ", " << "2 * m = " << mt2);
     TRACE1("forrestEnum = " << forrestEnum);
     PathSet fmain(f, decomposition->get_leaf(f));

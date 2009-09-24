@@ -3,8 +3,8 @@
 
 #include <libxml/tree.h>
 #include "decomposition.hh"
+#include "doubleseq.hh"
 #include "treescore.hh"
-#include "treeanno.hh"
 
 class Answer;
 class RelResult;
@@ -19,7 +19,7 @@ private:
     xmlNodePtr tree1;
     xmlNodePtr tree2;
     Decomposition decomposition;
-    TreeAnno anno2;
+    DoubleSeq doubleSeq;
     TreeScore lcsMemo;
 
 public:

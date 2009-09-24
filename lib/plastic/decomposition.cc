@@ -8,6 +8,7 @@ Decomposition::Decomposition(xmlNodePtr tree1, xmlNodePtr tree2):
     anno1(tree1)
 {
     MatchMap mm(tree1, tree2);
+    otherTreeSize = mm.get_other_tree_size();
     fill_path(tree1, tree1, mm);
 }
 

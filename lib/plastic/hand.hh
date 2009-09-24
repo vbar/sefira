@@ -31,9 +31,9 @@ private:
 public:
     // all pointer args must not be null and must stay valid for the
     // lifetime of the constructed object
-    Hand(xmlNodePtr f, xmlNodePtr g,
+    Hand(xmlNodePtr f,
 	 const Decomposition *decomposition,
-	 const TreeAnno &anno2,
+	 const DoubleSeq &double_seq,
 	 TreeScore *master_score);
 
     void compute();

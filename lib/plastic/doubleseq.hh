@@ -18,11 +18,19 @@ private:
     };
 
     Item *array;
-    const TNodeIndex arraySize;
+    TNodeIndex treeSize; // 1/2 of array size
 
 public:
-    DoubleSeq(xmlNodePtr g, const TreeAnno &anno);
+    DoubleSeq(xmlNodePtr g, TNodeIndex sz);
+    DoubleSeq(const DoubleSeq &other);
     ~DoubleSeq();
+
+    DoubleSeq &operator=(const DoubleSeq &other);
+
+    TNodeIndex get_tree_size() const
+    {
+        return treeSize;
+    }
 
     xmlNodePtr get_ystep(TNodeIndex idx) const
     {
@@ -42,10 +50,6 @@ private:
 
     // i is 0-based
     TNodeIndex fill(xmlNodePtr node, TNodeIndex i);
-  
-    // not implemented
-    DoubleSeq(const DoubleSeq &other);
-    DoubleSeq &operator=(const DoubleSeq &other);
 };
 
 }

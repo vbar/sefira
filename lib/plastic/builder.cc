@@ -13,7 +13,7 @@ Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
     tree1(tree1),
     tree2(tree2),
     decomposition(tree1, tree2),
-    anno2(tree2)
+    doubleSeq(tree2, decomposition.get_other_tree_size())
 {
     TRACE1("root1 = " << tree1);
     TRACE1("root2 = " << tree2);
@@ -45,7 +45,7 @@ RelResult Builder::compute_lcs()
 	xmlNodePtr x = *iter;
 	if (decomposition.get_leaf(x))
 	{
-	    Hand hand(x, tree2, &decomposition, anno2, &lcsMemo);
+	    Hand hand(x, &decomposition, doubleSeq, &lcsMemo);
 	    hand.compute();
 	}
 

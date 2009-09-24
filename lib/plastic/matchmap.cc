@@ -14,11 +14,11 @@ MatchMap::MatchMap(xmlNodePtr tree1, xmlNodePtr tree2)
     }
 
     TDensityMap density;
-    fill_density(tree2, density);
+    otherTreeSize = fill_density(tree2, density, 0);
     compute_match_count(tree1, density);
 }
 
-void MatchMap::fill_density(xmlNodePtr t, TDensityMap &d)
+TNodeIndex MatchMap::fill_density(xmlNodePtr t, TDensityMap &d, TNodeIndex sz)
 {
     TRACE1("enter fill_density(" << t << ", ...)");
     std::pair<TDensityMap::iterator, bool> inres = d.insert(
@@ -27,11 +27,15 @@ void MatchMap::fill_density(xmlNodePtr t, TDensityMap &d)
 	++(inres.first->second);
     }
 
+    ++sz;
+
     xmlNodePtr ch = t->children;
     while (ch) {
-	fill_density(ch, d);
+        sz = fill_density(ch, d, sz);
 	ch = ch->next;
     }
+
+    return sz;
 }
 
 TNodeIndex MatchMap::get_count(xmlNodePtr n) const
