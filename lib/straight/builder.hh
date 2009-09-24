@@ -6,11 +6,10 @@
 #include "lcsmemo.hh"
 
 class Answer;
+class Forrest;
 class RelResult;
 
 namespace straight {
-
-class Forrest;
 
 enum Direction { left, right };
 

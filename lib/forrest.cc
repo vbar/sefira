@@ -3,8 +3,6 @@
 #include <stdexcept>
 #include <string>
 
-namespace plastic {
-
 bool Forrest::operator<(const Forrest &other) const
 {
     const TLetter *a = get_letter();
@@ -149,4 +147,3 @@ std::ostream &operator<<(std::ostream &os, const Forrest &f)
     return os;
 }
 
-}

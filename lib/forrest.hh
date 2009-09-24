@@ -1,5 +1,5 @@
-#ifndef plastic_forrest_hh
-#define plastic_forrest_hh
+#ifndef forrest_hh
+#define forrest_hh
 
 #include <iostream>
 #include <vector>
@@ -7,7 +7,7 @@
 #include "envelope.hh"
 #include "nodeindex.hh"
 
-namespace plastic {
+typedef std::pair<TNodeIndex, TNodeIndex> TKernel;
 
 class Forrest : private Envelope<std::vector<xmlNodePtr> >
 {
@@ -60,7 +60,5 @@ private:
 };
 
 std::ostream &operator<<(std::ostream &os, const Forrest &f);
-
-}
 
 #endif
