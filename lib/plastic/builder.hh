@@ -16,8 +16,6 @@ class Graph;
 class Builder
 {
 private:
-    xmlNodePtr tree1;
-    xmlNodePtr tree2;
     Decomposition decomposition;
     DoubleSeq doubleSeq;
     TreeScore lcsMemo;

@@ -10,8 +10,6 @@
 namespace plastic {
 
 Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
-    tree1(tree1),
-    tree2(tree2),
     decomposition(tree1, tree2),
     doubleSeq(tree2, decomposition.get_other_tree_size())
 {
@@ -38,6 +36,7 @@ Answer Builder::get_lcs()
 RelResult Builder::compute_lcs()
 {
     TRACE1("enter compute_lcs()");
+    xmlNodePtr tree1 = decomposition.get_at(0);
     PostOrder iter(tree1);
     PostOrder end;
     while (iter != end)
@@ -52,7 +51,7 @@ RelResult Builder::compute_lcs()
 	++iter;
     }
 
-    const RelResult *r = lcsMemo.get(tree1, tree2);
+    const RelResult *r = lcsMemo.get(tree1, doubleSeq.get_ystep(1));
     if (r)
     {
         TRACE1("got score " << r->get_score());
