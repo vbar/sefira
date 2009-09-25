@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<lcs score="1">
-  <e/>
+<lcs score="4">
+  <a>
+    <b>
+      <a/>
+      <a/>
+    </b>
+  </a>
 </lcs>

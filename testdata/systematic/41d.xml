@@ -1,16 +1,4 @@
-<?xml version="1.0"?>
-<lcs score="9">
-  <a>
-    <b>
-      <c/>
-      <c/>
-    </b>
-    <b>
-      <c/>
-      <c/>
-    </b>
-    <b>
-      <c/>
-    </b>
-  </a>
+<?xml version="1.0" encoding="UTF-8"?>
+<lcs score="1">
+  <i/>
 </lcs>

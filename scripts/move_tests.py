@@ -65,7 +65,8 @@ def move_test(n, d):
 
     for c in cmd:
         r = os.system(c)
-        print c, "returned", r
+        if r:
+            print c, "returned", r
 
         
 def move_all(mn, d):

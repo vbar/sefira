@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
 <lcs score="5">
   <a>
-    <a/>
-    <a/>
-    <a/>
-    <a/>
+    <a>
+      <c/>
+    </a>
+    <a>
+      <d/>
+    </a>
   </a>
 </lcs>
