@@ -49,15 +49,20 @@ void Program::print_lcs(const char *fname1, const char *fname2)
     XDoc doc1 = xutil::parse_file(fname1);
     XDoc doc2 = xutil::parse_file(fname2);
 
-    xmlNodePtr tree1 = xutil::get_root_element(doc1);
-    Answer a = get_lcs(tree1, xutil::get_root_element(doc2));
+    bool second;
+    Answer a = get_lcs(xutil::get_root_element(doc1),
+	xutil::get_root_element(doc2),
+	second);
+
+    xmlDocPtr doc = second ? (xmlDocPtr)doc2 : (xmlDocPtr)doc1;
+    xmlNodePtr tree = xutil::get_root_element(doc);
 
     char buffer[6];
     sprintf(buffer, "%d", a.get_score());
     
     xmlNodePtr nt = new_node("lcs");
-    xmlDocSetRootElement(doc1, nt);
-    xutil::append_child(nt, tree1);
+    xmlDocSetRootElement(doc, nt);
+    xutil::append_child(nt, tree);
     xmlSetProp(nt,
 	reinterpret_cast<const xmlChar *>("score"),
 	reinterpret_cast<const xmlChar *>(buffer));
@@ -67,7 +72,7 @@ void Program::print_lcs(const char *fname1, const char *fname2)
 
     xmlChar *mem = 0;
     int size = 0;
-    xmlDocDumpFormatMemory(doc1, &mem, &size, 1);
+    xmlDocDumpFormatMemory(doc, &mem, &size, 1);
     
     std::copy(reinterpret_cast<char *>(mem),
 	reinterpret_cast<char *>(mem + size),

@@ -17,7 +17,7 @@ class INode;
 class Builder
 {
 private:
-    // used to initialize RootNode fields
+    // used to initialize RootNode instances
     NodeFactory nodeFactory;
 
     RootNode root1;
@@ -28,10 +28,18 @@ private:
     // has shorter lifetime than both RootNode instances
     SmallEnumCache smallEnumCache;
 
+    // initialized from RootNode instances
+    const bool topSwap;
+
 public:
     // trees passed to the constructor must stay valid for the
     // lifetime of the object
     Builder(xmlNodePtr tree1, xmlNodePtr tree2);
+
+    bool is_swapped() const 
+    {
+        return topSwap;
+    }
 
     Answer get_lcs();
 

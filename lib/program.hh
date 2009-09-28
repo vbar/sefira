@@ -12,8 +12,10 @@ public:
     int run(const char *tailname, int argc, char **argv);
 
 private:
-    // returned answer must contain (only) nodes from tree1
-    virtual Answer get_lcs(xmlNodePtr tree1, xmlNodePtr tree2) = 0;
+    // Returned answer must be a subset of either tree1, or tree2,
+    // depending on the output parameter: tree2 iff second is true,
+    // tree1 otherwise.
+    virtual Answer get_lcs(xmlNodePtr tree1, xmlNodePtr tree2, bool &second) = 0;
 
     void print_lcs(const char *fname1, const char *fname2);
 };

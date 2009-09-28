@@ -1,8 +1,8 @@
-#include "app.hh"
+#include "relapp.hh"
 #include "systematic/builder.hh"
 
 int main(int argc, char **argv)
 {
-    App<systematic::Builder> program;
+    RelApp<systematic::Builder> program;
     return program.run("systematic", argc, argv);
 }

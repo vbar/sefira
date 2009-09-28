@@ -51,7 +51,8 @@ inline static TSubProblem make_sub_problem(INode *v, INode *w, bool swap)
 
 Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
     root1(tree1, nodeFactory),
-    root2(tree2, nodeFactory)
+    root2(tree2, nodeFactory),
+    topSwap(root1.get_size() < root2.get_size())
 {
     TRACE1("root1 = " << root1);
     TRACE1("root2 = " << root2);
@@ -61,15 +62,15 @@ Answer Builder::get_lcs()
 {
     compute_lcs(&root1, &root2);
 
-    bool swap = root1.get_size() < root2.get_size();
-    RelResult r = fanPad.get(make_node_kernel(swap ? &root1 : &root2));
+    RootNode *top = topSwap ? &root1 : &root2;
+    RelResult r = fanPad.get(make_node_kernel(top));
 
     Answer a;
     for (RelResult::TSet::const_iterator i = r.begin();
 	 i != r.end();
 	 ++i)
     {
-	xmlNodePtr n = root1.get_at(*i);
+	xmlNodePtr n = top->get_at(*i);
 	assert(n);
 	a.insert(n);
     }
@@ -158,6 +159,12 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
     SmallEnum ge = smallEnumCache.get_enum(swap ? f : g, swap, twist);
     TNodeIndex i = ge.get_max_leaf();
 
+    // source tree: !topSwap && !swap => tree2 is smaller (i.e. the
+    // one we want) and is locally represented by g; if any flag
+    // changes, we swap the trees; when both are true, we're swapping
+    // twice, i.e. getting back to g.
+    bool reswap = swap == topSwap;
+
     for (TNodeIndex ip = 1; ip <= i; ++ip) {
         TNodeIndex jip = ge.get_max_size(ip);
         DynaPad s;
@@ -235,7 +242,7 @@ void Builder::compute_period(INode *f, INode *g, INode *parent,
 			    TRACE2(detail, "c+d = " << c);
 			}
 
-			INode *first = swap ? w : v;
+			INode *first = reswap ? w : v;
 			c.insert(first->get_inorder());
 			TRACE2(detail, "final c = " << c);
 
