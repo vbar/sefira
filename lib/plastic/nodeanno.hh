@@ -9,23 +9,16 @@ class NodeAnno
 {
 private:
     const TNodeIndex descCount;
-    const TNodeIndex preorder;
 
 public:
-    NodeAnno(TNodeIndex desc_count, TNodeIndex preorder):
-        descCount(desc_count),
-	preorder(preorder)
+    NodeAnno(TNodeIndex desc_count):
+        descCount(desc_count)
     {
     }
 
     TNodeIndex get_desc_count() const
     {
         return descCount;
-    }
-
-    TNodeIndex get_preorder() const
-    {
-        return preorder;
     }
 };
 

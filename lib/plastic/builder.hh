@@ -24,6 +24,11 @@ public:
     // trees must stay valid for the lifetime of the constructed object
     Builder(xmlNodePtr tree1, xmlNodePtr tree2);
 
+    bool is_swapped() const 
+    {
+        return decomposition.is_swapped();
+    }
+
     Answer get_lcs();
 
 private:

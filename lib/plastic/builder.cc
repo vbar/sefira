@@ -11,10 +11,11 @@ namespace plastic {
 
 Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
     decomposition(tree1, tree2),
-    doubleSeq(tree2, decomposition.get_other_tree_size())
+    doubleSeq(decomposition.get_other_tree(),
+	      decomposition.get_other_tree_size())
 {
-    TRACE1("root1 = " << tree1);
-    TRACE1("root2 = " << tree2);
+    TRACE1("unswapped root1 = " << tree1);
+    TRACE1("unswapped root2 = " << tree2);
 }
 
 Answer Builder::get_lcs()
@@ -26,7 +27,7 @@ Answer Builder::get_lcs()
 	 i != r.end();
 	 ++i)
     {
-	xmlNodePtr n = decomposition.get_at(*i);
+        xmlNodePtr n = doubleSeq.get_ystep(*i);
 	a.insert(n);
     }
 
@@ -36,7 +37,7 @@ Answer Builder::get_lcs()
 RelResult Builder::compute_lcs()
 {
     TRACE1("enter compute_lcs()");
-    xmlNodePtr tree1 = decomposition.get_at(0);
+    xmlNodePtr tree1 = decomposition.get_tree();
     PostOrder iter(tree1);
     PostOrder end;
     while (iter != end)

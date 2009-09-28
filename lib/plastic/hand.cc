@@ -210,7 +210,7 @@ void Hand::cycle_left(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		    else
 		    {
 			RelResult r;
-			r.insert(decomposition->get_preorder(xi));
+			r.insert(j);
 			edgeGraph.insert(
 			    GraphEdge(
 				GraphPoint(i - 1, j + 1, egj),
@@ -259,7 +259,7 @@ void Hand::cycle_right(TNodeIndex i, xmlNodePtr xi, bool on_main)
 		    else
 		    {
 			RelResult r;
-			r.insert(decomposition->get_preorder(xi));
+			r.insert(egk);
 			edgeGraph.insert(
 			    GraphEdge(
 				GraphPoint(i - 1, egk, k - 1),

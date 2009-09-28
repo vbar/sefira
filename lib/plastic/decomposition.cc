@@ -5,11 +5,28 @@
 namespace plastic {
 
 Decomposition::Decomposition(xmlNodePtr tree1, xmlNodePtr tree2):
-    anno1(tree1)
+    anno(tree1)
 {
-    MatchMap mm(tree1, tree2);
-    otherTreeSize = mm.get_other_tree_size();
-    fill_path(tree1, tree1, mm);
+    MatchMap mm(tree1, 1 + anno.get_desc_count(tree1), tree2);
+    topSwap = !mm.is_size_ok();
+    if (topSwap) {
+        anno.reset(tree2);
+
+	MatchMap altmm(tree2, 1 + anno.get_desc_count(tree2), tree1);
+	if (!altmm.is_size_ok()) {
+	    throw std::logic_error("unsatisfiable MatchMap");
+	}
+
+        otherTreeSize = altmm.get_other_tree_size();
+	fill_path(tree2, tree2, altmm);
+
+	otherTree = tree1;
+    } else {
+        otherTreeSize = mm.get_other_tree_size();
+	fill_path(tree1, tree1, mm);
+
+	otherTree = tree2;
+    }
 }
 
 xmlNodePtr Decomposition::get_leaf(xmlNodePtr path_root) const

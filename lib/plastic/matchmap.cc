@@ -7,15 +7,14 @@
 
 namespace plastic {
 
-MatchMap::MatchMap(xmlNodePtr tree1, xmlNodePtr tree2)
+MatchMap::MatchMap(xmlNodePtr tree1, TNodeIndex sz1, xmlNodePtr tree2)
 {
-    if (!tree1 || !tree2) {
-        throw std::invalid_argument("empty tree");
-    }
-
     TDensityMap density;
     otherTreeSize = fill_density(tree2, density, 0);
-    compute_match_count(tree1, density);
+    sizeOk = sz1 >= otherTreeSize;
+    if (sizeOk) {
+        compute_match_count(tree1, density);
+    }
 }
 
 TNodeIndex MatchMap::fill_density(xmlNodePtr t, TDensityMap &d, TNodeIndex sz)

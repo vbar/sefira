@@ -16,10 +16,24 @@ private:
 
     TMatchMap matchMap;
     TNodeIndex otherTreeSize;
+    bool sizeOk;
 
 public:
-    // trees must stay valid for the lifetime of the constructed object
-    MatchMap(xmlNodePtr tree1, xmlNodePtr tree2);
+    // trees must stay valid for the lifetime of the constructed
+    // object
+    // sz1 is the size of tree1; when it's smaller than the size of
+    // tree2, the MatchMap instance is constructed invalid and the
+    // only method which can be called on it is is_size_ok (which
+    // returns false). when is_size_ok returns true, it means size of
+    // tree1 is at least size of tree2 (which is available as the
+    // return value of get_other_tree_size) and the new instance can
+    // be used.
+    MatchMap(xmlNodePtr tree1, TNodeIndex sz1, xmlNodePtr tree2);
+
+    bool is_size_ok() const
+    {
+        return sizeOk;
+    }
 
     TNodeIndex get_count(xmlNodePtr n) const;
 
