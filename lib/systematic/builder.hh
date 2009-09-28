@@ -3,6 +3,7 @@
 
 #include <libxml/tree.h>
 #include "fanpad.hh"
+#include "nodefactory.hh"
 #include "rootnode.hh"
 #include "smallenumcache.hh"
 #include "stemtable.hh"
@@ -16,6 +17,9 @@ class INode;
 class Builder
 {
 private:
+    // used to initialize RootNode fields
+    NodeFactory nodeFactory;
+
     RootNode root1;
     RootNode root2;
     StemTable stemTable;

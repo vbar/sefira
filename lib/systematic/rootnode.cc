@@ -1,10 +1,10 @@
 #include "rootnode.hh"
-#include "inodefactory.hh"
+#include "nodefactory.hh"
 #include "xutil.hh"
 
 namespace systematic {
 
-RootNode::RootNode(xmlNodePtr root):
+RootNode::RootNode(xmlNodePtr root, NodeFactory &factory):
     inner(root),
     left(make_real_left(factory, root)),
     right(make_real_right(factory, root))

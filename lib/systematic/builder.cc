@@ -50,8 +50,8 @@ inline static TSubProblem make_sub_problem(INode *v, INode *w, bool swap)
 }
 
 Builder::Builder(xmlNodePtr tree1, xmlNodePtr tree2):
-    root1(tree1),
-    root2(tree2)
+    root1(tree1, nodeFactory),
+    root2(tree2, nodeFactory)
 {
     TRACE1("root1 = " << root1);
     TRACE1("root2 = " << root2);

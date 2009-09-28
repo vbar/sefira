@@ -3,26 +3,24 @@
 
 #include <libxml/tree.h>
 #include "annode.hh"
-#include "nodefactory.hh"
 #include "treetable.hh"
 
 namespace systematic {
 
 class INode;
-class INodeFactory;
+class NodeFactory;
 
 // presents the XML tree as binary
 class RootNode : public AnNode
 {
 private:
-    NodeFactory factory;
     TreeTable treeTable;
     xmlNodePtr inner;
     INode *left;
     INode *right;
 
 public:
-    RootNode(xmlNodePtr root);
+    RootNode(xmlNodePtr root, NodeFactory &factory);
     virtual ~RootNode();
 
     xmlNodePtr get_at(TNodeIndex idx)
