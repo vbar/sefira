@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <lcs score="5">
   <a>
-    <a>
+    <b>
       <c/>
-    </a>
-    <a>
+    </b>
+    <b>
       <d/>
-    </a>
+    </b>
   </a>
 </lcs>

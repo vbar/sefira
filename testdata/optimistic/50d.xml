@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
-<h>
-  <u>
+<lcs score="5">
+  <h>
     <s/>
     <s/>
     <s/>
-  </u>
-  <b/>
-</h>
-
+    <b/>
+  </h>
+</lcs>

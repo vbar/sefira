@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <lcs score="2">
-  <a>
-    <a/>
-  </a>
+  <one/>
+  <two/>
 </lcs>
