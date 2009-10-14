@@ -1,6 +1,6 @@
 if [ catch {
     set i 0
-    while { $i <= 50 } {
+    while { $i <= 52 } {
 	if { $i < 10 } {
 	    set filled 0$i
 	} else {

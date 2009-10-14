@@ -1,9 +1,7 @@
-<?xml version="1.0"?>
-<a>
-  <a>
-    <a>
-      <a/>
-    </a>
-  </a>
-</a>
-
+<?xml version='1.0' encoding='UTF-8'?>
+<top>
+  <one/>
+  <a/>
+  <b/>
+  <two/>
+</top>
