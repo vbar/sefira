@@ -1,10 +1,10 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.50)
-AC_INIT(sefira, 0.01, vbar@comp.cz)
+AC_PREREQ([2.69])
+AC_INIT([sefira],[0.01],[vbarta@mangrove.cz])
 AC_CONFIG_SRCDIR([bin/optimistic.cc])
-AM_INIT_AUTOMAKE(sefira, 0.01)
+AM_INIT_AUTOMAKE
 
 AC_CONFIG_HEADER([config.h])
 
